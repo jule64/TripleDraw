@@ -4,13 +4,13 @@ SimuDraw
 An odds simulator for the game of 2-7 Triple Draw
 
 
-Despite being one of the hottest games in online poker, little information can be found to improve your 2-7 Triple Draw skills.
+Despite being one of the hottest game in online poker currently, there is little information out there to help one improve his 2-7 Triple Draw skills.
 
-SimuDraw tries to remedy to this problem by offering a virtual environment where users can simulate various games configurations and study their associated odds.
+SimuDraw tries to remedy to this problem by offering a virtual environment where users can simulate various games configurations and study the associated odds.
 
-Before jumping in head first please carefully note that SimuDraw is a simulator, not a calculator, its results are hence an approximation of the actual odds and need to be taken as such.
+SimuDraw generate its results by simulating a large amount of draws and averaging the results.  As such please carefully note that it does not provide exact odds but approximations of the actual odds.
 
-To understand this difference, suppose you wanted to know the odds of being serve exactly a J low.  The actual odds are 4.9% and are given by the following formaula: C(9,4)*(5^4-4)/C(52,5)) = 4.9%.   Running this particular example twice with SimuDraw gave me a result of 4.87% and 4.95%, or approximately +/-0.1% around the actual value.
+To help understand the difference, suppose you wanted to know what are the chances of being served exactly a J low from the start.  The odds of this event happening are 4.905% and are given by the following formula: C(9,4)*(5^4-4)/C(52,5)) = 4.9%. Using SimuDraw gave a result of 4.87% the first time and 4.95% the second or +/-0.1% from the actual value.
 
 
 If you have any questions or suggestions please feel free to contact me. 
