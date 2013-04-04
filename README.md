@@ -1,17 +1,20 @@
 SimuDraw
 ========
 
-An odds simulator for the games of 2-7 Triple &amp; Single Draw
+An odds simulator for the game of 2-7 Triple Draw
 
 
-2-7 Triple &amp; Single Draw are the hottest games in online poker right now.  As with any poker games, a strong understanding of the odds is critical to become a successful player.
+Despite being one of the hottest games in online poker, little information can be found to improve your 2-7 Triple Draw skills.
 
-SimuDraw helps you simulate various game configurations/hands and quickly generate the associated odds, such as the odds of hitting an 8 low or a 9 low.
+SimuDraw tries to remedy to this problem by offering a virtual environment where users can simulate various games configurations and study their associated odds.
 
-SimuDraw works by simulating thousands of draws per simulation and then averaging the results to approximate the actual odds.  As such you will find that the odds it generates are always slightly different from those that one would obtain using traditional probabilistic formulas.  The current calibration ensure those difference are small however.
-For example, the odds of drawing a J low exactly are 4.9% (= C(9,4)*(5^4-4)/C(52,5)).  SimuDraw gives between 4.87% and 4.95%
+Before jumping in head first please carefully note that SimuDraw is a simulator, not a calculator, its results are hence an approximation of the actual odds and need to be taken as such.
+
+To understand this difference, suppose you wanted to know the odds of being serve exactly a J low.  The actual odds are 4.9% and are given by the following formaula: C(9,4)*(5^4-4)/C(52,5)) = 4.9%.   Running this particular example twice with SimuDraw gave me a result of 4.87% and 4.95%, or approximately +/-0.1% around the actual value.
 
 
-Note that SimuDraw is a Python program and has been tested on Python 2.7. Other version of Python can possibly be used although they have not been tested.
+If you have any questions or suggestions please feel free to contact me. 
 
-If you would like to contribute please fork this project.  If you have any questions please feel free to send me an email.
+If you would like to contribute please fork this project.
+
+Note: SimuDraw is a Python program and has been developed and tested using a Python 2.7 interpreter. As such I cannot garantee that it will work with earlier version Python or with Python 3.
