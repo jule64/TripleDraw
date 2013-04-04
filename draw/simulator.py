@@ -5,128 +5,81 @@ Created on Mar 28, 2013
 '''
 
 from draw import deck, strategy, player
-import SystemEvents
-import sys
 import cProfile
 
 class Simulator():
     '''
+    Main Class where the user can create
+    scenarios and run simulations
     
     '''
 
 
-    def __init__(self):
-        '''
-        
-        '''
-        pass
-    
-    
-def run_simu(strat,seq,nbdraws,_runs,carddeck):
-    
-    h1tp=seq
-    
-    
-    
-    
-    
-#    h2tp=[]
-#    h3tp=[]
-    
-    s1=strategy.Strategy(strat)
-#    s2=strategy.Strategy(5)
-#    s3=strategy.Strategy(5)
-    
-    
-    count1=0
-#    count2=0
-#    count3=0
-    
-    run=_runs
-    for i in range(run):
-        
 
+    
+    def run_simu(self,strat,raw_seqs,nbdraws,_runs,carddeck):
 
-        s1.reset()
-#        s2.reset()
-#        s3.reset()
         
-        #generate a fresh new sequence of cards from
-        #the initial stubs
-#        seqs=carddeck.get_sequences([h1tp,h2tp,h3tp])
-        seqs=carddeck.get_sequences([h1tp])
-        
-#        print str([seqs[0][i]%13 for i in range(5)])
+        s1=strategy.Strategy(strat)
+#        s2=strategy.Strategy(5)
         
         
-        h1=seqs[0]
-#        h2=seqs[1]
-#        h3=seqs[2]
-                        
-        #initialise deck
-#        carddeck.reset(h1+h2+h3)
-        carddeck.reset(h1)
+        count1=0
+#        count2=0
         
-        p1=player.Player(carddeck, s1, h1)
-#        p2=player.Player(carddeck, s2, h2)
-#        p3=player.Player(carddeck, s3, h3)
-        
-#        print "starting player seq is "+str(p1._seq)
-        
-        #simulate initial cards dealt
-        p1.draw()
-#        p2.draw()
-#        p3.draw()
-        
-#        print "player seq after initial dealing is "+str(p1._seq)
-        
-        
-        #simulate three draws plus
-        #card selection
-        for v in range(nbdraws):
-            p1.select_cards()
-#            p2.select_cards()
-#            p3.select_cards()
+        run=_runs
+        for i in range(run):
+    
+            s1.reset()
+#            s2.reset()
             
+            #generate a fresh new sequence of cards from
+            #the initial stubs
+            #this also creates a shuffled deck wich excludes
+            #any cards provided in raw_seqs
+            seqs=carddeck.get_sequences(raw_seqs)
+            
+            h1=seqs[0]
+#            h2=seqs[1]
+                            
+
+            
+            p1=player.Player(carddeck, s1, h1)
+#            p2=player.Player(carddeck, s2, h2)
+            
+            #simulate initial cards dealt
             p1.draw()
 #            p2.draw()
-#            p3.draw()
-        
-        
-        p1.check_last()
-#        p2.check_last()
-#        p3.check_last()
-        
-        #printout the final hand
-        
-        #if p1.issuccess and (p1._seq[3]%13)!=6:
-        
-        #the below line keeps only J lows
-        if p1.issuccess and max([p1._seq[i]%13 for i in range(5)])==strat:
-        #if p1.issuccess:
-            count1=count1+1
-#            print [p1._seq[i]%13+2 for i in range(5)]
             
+            #simulate three draws plus
+            #card selection
+            #this code is skipped if nber of
+            #draws is set to 0 in startme()
+            for v in range(nbdraws):
+                p1.select_cards()
+#                p2.select_cards()
+                
+                p1.draw()
+#                p2.draw()
             
-#            print str([p1._seq[i]%13+2 for i in range(5)])
-
-#        if p2.issuccess:
-#            count2=count2+1
-#
-#        if p3.issuccess:
-#            count3=count3+1
-
-    
-#    totalcount=count1+count2+count3
-#        if i%10000==0 and i>0:
-#            print str(i) +"  "+ str((count1+0.0)/i)
-        
-    return (count1+0.0)/run
-#    print "p2 is " +str((count2+0.0)/run)
-#    print "p3 is " +str((count3+0.0)/run)
+            p1.check_last()
+#            p2.check_last()
+            
+            #the below line keeps only J lows
+            if p1.issuccess and max([p1._seq[i]%13 for i in range(5)])==strat:
+                count1=count1+1
+                
+#            if p2.issuccess:
+#                count2=count2+1
+            
+        return (count1+0.0)/run
+#        print "p2 is " +str((count2+0.0)/run)
         
 
 def startme():   
+    
+    simulator = Simulator()
+    
     carddeck = deck.Deck()
     
     runs=50000
@@ -136,15 +89,22 @@ def startme():
         print "Nber of draws left: "+str(u)
         print ""
             
-        #strategy
+        #strategy - 9 means J low
         for j in [9]:
             print "Target: "+str(j+2)+" low"
             print ""
             print "starting hand\t|  Odds (%)"
             
             #hands
-            #[],['2'],['2','3','4','5'],['2','3','4','7']
-            for i in [[]]:
+            #the first list is the hand representing the player's
+            #cards that we want to see in the starting hand.  Can be
+            #left blanc.
+            #the second list holds the dead cards, which is the cards that
+            #we assume are not in the deck.  This is useful to simulate when
+            #a card is in the opponent's hands.
+            #example of pre draw list:
+            #[['2',''9'],['2','3','5']]
+            for i in [[[],[]]]:
                 
                 g=0
                 if i.__len__()>4:
@@ -158,7 +118,7 @@ def startme():
                     g=1
                 
                 
-                print s[:-1] + ['\t\t','\t'][g]+"|  " + str(run_simu(j,i,u,runs,carddeck)*100)
+                print s[:-1] + ['\t\t','\t'][g]+"|  " + str(simulator.run_simu(j,i,u,runs,carddeck)*100)
             
             print ""
             print ""   
@@ -175,6 +135,8 @@ if __name__ == "__main__":
     '''
     
     startme()
+    
+    #the line below is used for profiling
 #    cProfile.run('startme()')
 
     
