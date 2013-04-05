@@ -37,7 +37,7 @@ class TestPlayer(unittest.TestCase):
         after a draw
         '''
         carddeck = deck.Deck()
-        carddeck.reset()
+        carddeck.get_sequences()
         s1 = strategy.Strategy(6)
         p1 = player.Player(carddeck, s1)
         p1.draw()
@@ -51,7 +51,7 @@ class TestPlayer(unittest.TestCase):
         selection strategy is between 0 and 5
         '''        
         carddeck = deck.Deck()
-        carddeck.reset()
+        carddeck.get_sequences()
         s1 = strategy.Strategy(6)
         p1 = player.Player(carddeck, s1)
         p1.draw()
@@ -66,8 +66,6 @@ class TestPlayer(unittest.TestCase):
         was successful and False otherwise
         '''
         carddeck = deck.Deck()
-        
-        carddeck.reset()
         
         finalseq=carddeck.get_sequences([['2c','3c','4d','6s','8h']])[0]
         s1 = strategy.Strategy(6)

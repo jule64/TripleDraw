@@ -82,15 +82,17 @@ def startme():
     
     carddeck = deck.Deck()
     
-    runs=50000
+    carddeck.reset()
+    
+    runs=20000
     
     #nber of draws
-    for u in [0]:
+    for u in [2]:
         print "Nber of draws left: "+str(u)
         print ""
             
         #strategy - 9 means J low
-        for j in [9]:
+        for j in [6,7]:
             print "Target: "+str(j+2)+" low"
             print ""
             print "starting hand\t|  Odds (%)"

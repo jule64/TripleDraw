@@ -22,7 +22,8 @@ class TestDeck(unittest.TestCase):
         '''
         
         d=deck.Deck()
-        d.reset()
+        
+        d.get_sequences()
         
         self.assertEqual(d._deck.__len__(),52)
 
@@ -38,8 +39,7 @@ class TestDeck(unittest.TestCase):
         card_seq=['2d','Jc','Kc','Qs']
         
         d=deck.Deck()
-        seqs=d.get_sequences([card_seq])
-        d.reset(seqs[0])
+        d.get_sequences([card_seq])
         
         self.assertEqual(d._deck.__len__(),52-card_seq.__len__())
 
@@ -51,7 +51,7 @@ class TestDeck(unittest.TestCase):
         cards from it.
         '''
         d=deck.Deck()
-        d.reset()
+        d.get_sequences()
         
         self.assertEqual(d.retrieve(3).__len__(),3)
 
