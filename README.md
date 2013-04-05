@@ -8,7 +8,7 @@ SimuDraw is an odds simulator for the game of 2-7 Triple Draw
 
 Despite being one of the hottest games in online poker, there are few tools available out there for 2-7 Triple Draw players who want to improve their game.
 
-SimuDraw tries to remedy this problem by offering players a virtual environment where they can study the outcome of various hands/game configurations and their associated odds.
+SimuDraw tries to remedy this problem by providing a virtual environment where players can study the outcome of various hands/game configurations and their associated odds.
 
 
 ## How it works
