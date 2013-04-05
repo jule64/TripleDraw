@@ -82,17 +82,15 @@ def startme():
     
     carddeck = deck.Deck()
     
-    carddeck.reset()
-    
-    runs=20000
+    runs=50000
     
     #nber of draws
-    for u in [2]:
+    for u in [0]:
         print "Nber of draws left: "+str(u)
         print ""
             
         #strategy - 9 means J low
-        for j in [6,7]:
+        for j in [9]:
             print "Target: "+str(j+2)+" low"
             print ""
             print "starting hand\t|  Odds (%)"
@@ -136,10 +134,10 @@ if __name__ == "__main__":
     
     '''
     
-    startme()
+#    startme()
     
     #the line below is used for profiling
-#    cProfile.run('startme()')
+    cProfile.run('startme()')
 
     
     
