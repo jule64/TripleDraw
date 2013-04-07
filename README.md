@@ -20,7 +20,7 @@ To illustrate the difference, suppose you wanted to know what the chances are of
 
 ## Performances
 
-The current version of SimuDraw (1.0) has an average processing time of 7 seconds per 50,000 simulations, down from 13 seconds for the initial unrealeased version.
+The current version of SimuDraw (1.0) has an average processing time of 7 seconds per 50,000 simulations, down from 13 seconds for the initial unreleased version.
 
 ## Versionning
 
