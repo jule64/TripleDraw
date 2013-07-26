@@ -4,7 +4,8 @@ Created on Mar 28, 2013
 @author: jule64@gmail.com
 '''
 
-from draw import deck, strategy, player
+from draw import strategy, player
+from draw.deck import Deck
 import cProfile
 
 class Simulator():
@@ -75,69 +76,62 @@ class Simulator():
         return (count1+0.0)/run
 #        print "p2 is " +str((count2+0.0)/run)
         
-
-def startme():   
-    
-    simulator = Simulator()
-    
-    carddeck = deck.Deck()
-    
-    runs=50000
-    
-    #nber of draws
-    for u in [0]:
-        print "Nber of draws left: "+str(u)
-        print ""
-            
-        #strategy - 9 means J low
-        for j in [9]:
-            print "Target: "+str(j+2)+" low"
+    @staticmethod
+    def startme():   
+        
+        simulator = Simulator()
+        
+        carddeck = Deck()
+        
+        runs=50000
+        
+        #nber of draws
+        for u in [0]:
+            print "Nber of draws left: "+str(u)
             print ""
-            print "starting hand\t|  Odds (%)"
-            
-            #hands
-            #the first list is the hand representing the player's
-            #cards that we want to see in the starting hand.  Can be
-            #left blanc.
-            #the second list holds the dead cards, which is the cards that
-            #we assume are not in the deck.  This is useful to simulate when
-            #a card is in the opponent's hands.
-            #example of pre draw list:
-            #[['2',''9'],['2','3','5']]
-            for i in [[[],[]]]:
                 
-                g=0
-                if i.__len__()>4:
-                    g=1
-                s=""
-                for d in i:
-                    s=s+str(d)+","
+            #strategy - 9 means J low
+            for j in [9]:
+                print "Target: "+str(j+2)+" low"
+                print ""
+                print "starting hand\t|  Odds (%)"
                 
-                if i==[]:
-                    s="any 5 cards"
-                    g=1
+                #hands
+                #the first list is the hand representing the player's
+                #cards that we want to see in the starting hand.  Can be
+                #left blanc.
+                #the second list holds the dead cards, which is the cards that
+                #we assume are not in the deck.  This is useful to simulate when
+                #a card is in the opponent's hands.
+                #example of pre draw list:
+                #[['2',''9'],['2','3','5']]
+                for i in [[[],[]]]:
+                    
+                    g=0
+                    if i.__len__()>4:
+                        g=1
+                    s=""
+                    for d in i:
+                        s=s+str(d)+","
+                    
+                    if i==[]:
+                        s="any 5 cards"
+                        g=1
+                    
+                    
+                    print s[:-1] + ['\t\t','\t'][g]+"|  " + str(simulator.run_simu(j,i,u,runs,carddeck)*100)
                 
-                
-                print s[:-1] + ['\t\t','\t'][g]+"|  " + str(simulator.run_simu(j,i,u,runs,carddeck)*100)
-            
-            print ""
-            print ""   
-    
-    
+                print ""
+                print ""   
+        
+        
 
 if __name__ == "__main__":
     
-    '''
-    Run a 7 low strategy 1000 times
-    in which one player has all the cards
-    except a 7.
-    
-    '''
-    
-#    startme()
+#    Simulator.startme()
     
     #the line below is used for profiling
-    cProfile.run('startme()')
+    cProfile.run('Simulator.startme()')
 
     
     
