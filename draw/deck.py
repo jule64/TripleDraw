@@ -88,9 +88,12 @@ class Deck(object):
         rankcards=self._getrankcards(seqs)
                 
         fullcardsmerge=[i for o in fullcards for i in o]
-        
+       
+        #I believe this should be a queue that holds random sequences
+        #already generated during idle mode 
         randdeck=random.sample(range(52),52)
         tree=self._gettree(randdeck,fullcardsmerge)
+        
 
         anysuitcardsseqs=self._getanysuitcardsseqs(tree,rankcards)
 

@@ -38,4 +38,5 @@ If you would like to contribute please fork this project.
 ## Next steps
 
 1- Add small gui for entering starting cards, number of draws and number of simul
+
 2- Improve simulation runtime performance (see profiler notes)
