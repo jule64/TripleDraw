@@ -13,6 +13,9 @@ class Simulator():
     Main Class where the user can create
     scenarios and run simulations
     
+    NOTE: need to create interface for implementing simulations
+    instead of freeform like here..
+    
     '''
 
 
@@ -22,17 +25,14 @@ class Simulator():
 
         
         s1=strategy.Strategy(strat)
-#        s2=strategy.Strategy(5)
         
         
         count1=0
-#        count2=0
         
         run=_runs
         for i in range(run):
     
             s1.reset()
-#            s2.reset()
             
             #generate a fresh new sequence of cards from
             #the initial stubs
@@ -41,16 +41,13 @@ class Simulator():
             seqs=carddeck.get_sequences(raw_seqs)
             
             h1=seqs[0]
-#            h2=seqs[1]
                             
 
             
             p1=player.Player(carddeck, s1, h1)
-#            p2=player.Player(carddeck, s2, h2)
             
             #simulate initial cards dealt
             p1.draw()
-#            p2.draw()
             
             #simulate three draws plus
             #card selection
@@ -58,23 +55,16 @@ class Simulator():
             #draws is set to 0 in startme()
             for v in range(nbdraws):
                 p1.select_cards()
-#                p2.select_cards()
                 
                 p1.draw()
-#                p2.draw()
             
             p1.check_last()
-#            p2.check_last()
             
-            #the below line keeps only J lows
+            #the below line keeps only Jack lows
             if p1.issuccess and max([p1._seq[i]%13 for i in range(5)])==strat:
                 count1=count1+1
                 
-#            if p2.issuccess:
-#                count2=count2+1
-            
         return (count1+0.0)/run
-#        print "p2 is " +str((count2+0.0)/run)
         
     @staticmethod
     def startme():   
@@ -86,7 +76,7 @@ class Simulator():
         runs=50000
         
         #nber of draws
-        for u in [0]:
+        for u in [1]:
             print "Nber of draws left: "+str(u)
             print ""
                 
@@ -128,10 +118,10 @@ class Simulator():
 
 if __name__ == "__main__":
     
-#    Simulator.startme()
+    Simulator.startme()
     
     #the line below is used for profiling
-    cProfile.run('Simulator.startme()')
+#     cProfile.run('Simulator.startme()')
 
     
     
