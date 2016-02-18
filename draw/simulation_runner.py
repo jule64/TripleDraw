@@ -61,7 +61,9 @@ class Simulator():
             p1.check_last()
             
             #the below line keeps only Jack lows
-            if p1.issuccess and max([p1._seq[i]%13 for i in range(5)])==strat:
+            #if p1.issuccess and max([p1._seq[i]%13 for i in range(5)])==strat:
+            
+            if p1.issuccess:
                 count1=count1+1
                 
         return (count1+0.0)/run
@@ -73,15 +75,15 @@ class Simulator():
         
         carddeck = Deck()
         
-        runs=50000
+        runs=15000
         
         #nber of draws
-        for u in [1]:
+        for u in [0]:
             print "Nber of draws left: "+str(u)
             print ""
                 
             #strategy - 9 means J low
-            for j in [9]:
+            for j in [9,8]:
                 print "Target: "+str(j+2)+" low"
                 print ""
                 print "starting hand\t|  Odds (%)"
