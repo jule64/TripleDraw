@@ -1,7 +1,7 @@
 SimuDraw
 ========
 
-SimuDraw is an odds simulator for the game of 2-7 Triple Draw
+SimuDraw simulates drawing statistics for the game of 2-7 Triple Draw (poker)
 
 
 ## Background Info
