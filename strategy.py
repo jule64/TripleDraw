@@ -1,31 +1,9 @@
-'''
-Created on Mar 26, 2013
-
-@author: jule64@gmail.com
-'''
-
 import sys
 
 
-#def time_capture(fn):
-#
-#    def decofn(self=None, *args, **kwargs):
-#        t1= 
-#        res = fn(self, *args, **kwargs)
-#        print t1-timeit.time()
-#        return res
-#    
-#    return decofn    
-
-
-
 class Strategy(object):
-    '''
-    classdocs
-    '''
 
-
-    def __init__(self, target=5):
+    def __init__(self, target=9):
         '''
         params should say wether the aim is to draw 7 low
         or 9 low etc
@@ -37,7 +15,7 @@ class Strategy(object):
     def reset(self):
         self.issuccess=True
         
-#    @time_capture
+
     def run(self,seq,finalcheck=False):
         
         '''
@@ -72,7 +50,7 @@ class Strategy(object):
         for i in seq:
             curindex=seq.index(i)
             
-            #checking if card of any suit is equal or less than rank 8
+            #checking if card of any suit is equal to or less than target rank
             if i%13 > self.target:
                 #reject card
                 seq[curindex]=None
