@@ -1,6 +1,5 @@
 
 from strategy import Strategy
-import player
 from deck import Deck
 
 
