@@ -1,26 +1,26 @@
 TripleDraw
 ========
 
-TripleDraw is a command line tool that calculates advanced hands probabilities for the game of 2-7 Triple Draw (poker)
+TripleDraw is a command line tool to study advanced hands probabilities for the game of 2-7 Triple Draw (poker)
 
 
 
 ## Simulated vs Mathematical Probabilities
 
-TripleDraw produces hands probabilities by **simulating** large amounts of draws and averaging all the outcomes. This technic, also called Monte Carlo simulations, allows to quickly estimate the probabilities of any type of simple or complex event scenarios found in a game of 2-7 Triple Draw. 
+TripleDraw uses a technique called Monte Carlo simulations which allows it to evaluate any types of complex scenarios by **simulating** large amounts of draws and averaging the outcomes.
 
-This flexibility however comes at the cost of precision and it is important to note that TripleDraw produces **approximate** probabilities as opposed to mathematical ones.  This means that a probability calculated by TripleDraw will be very close to the theoretical one albeit never exactly equal to it.  In practice however this trade off between precision and flexibility is usually acceptable and as a user you have control over how much precision you want as we will show in the example below.
+While simulations are a flexible and powerful way to estimate the probabilities of complex events, it is important to note that this comes at a cost of some imprecision in the results.  Indeed because it is a simulator, TripleDraw’s results will be very close to the theoretical values of a given event albeit never exactly equal to it.  To illustrate this point let’s look at an example.
 
 
 ### Example
 
-Given that TripleDraw estimates probabilities it is worth checking how close it gets to the true mathematical probability of a given event. Suppose you wanted to know the odds of being dealt a **Jack low *pre-flop***.  The mathematical odds of this event are *9.654%(\*)*. TripleDraw by contrast gave odds of *9.804%*, *9.66%* and *9.57%* in three separate runs using the default 50,000 simulations per run. At **1 million** simulations the result becomes *9.653%*, or a *0.001%* difference only.
+TripleDraw provides estimations of mathematical probabilities, as such it is worth checking how close it gets to the actual values of a given event.  As an example suppose you wanted to know the odds of being dealt a **Jack low** ***pre-flop***.  The mathematical odds of this event are *9.654%* (\*). TripleDraw by contrast gave values of *9.804%*, *9.66%* and *9.57%* in three separate runs of 50,000 simulations per run. At **1 million** simulations the result becomes *9.653%*, which is virtually equal to the mathematical value.
 
-As you saw in this example, you can increase precision by simply increasing the number of simulations.  This however comes at a cost of longer simulation time: for instance the three 50k simulations above ran in less than a second each while the 1 million simulations took about 10 seconds(\*\*).  At the end of the day it is up to you to decide when you need higher precision depending on how closely you want to study an event.  You can easily increase precision using the `--s` parameter in the command line (see the `how to use` below for more options).  
+As you saw in the example above, you can get closer to the true value of an event by simply increasing the number of simulations.  Doing so however comes at a cost of longer simulation time: for instance 50k simulations run in less than 1 second, a very acceptable time. For 1 million simulations on the other hand this goes to 10 seconds(**).  Note that you can set the number of simulations you want to run by using the `-n` parameter in the command line which allows you to easily increase or decrease precision as required.
 
-\* Details of this calculation can be found the `study` folder in this repository.  Be warned it is quite a mouthful of equations, and that's only a simple pre-flop probability! TripleDraw allows you to study much more complex scenarios without requiring to figure out any of the complex maths underpinning those scenarios.
+(*) Details of this calculation can be found the `study` folder in this repository.  Be warned it is quite a mouthful of equations, and that's only a simple pre-flop probability! TripleDraw allows you to study much more complex scenarios without requiring to figure out any of the complex maths underpinning those scenarios.
 
-\*\* calculations were run on an 8 cores Macbook pro, actual performance will be dependent on your system specs.  
+(**) calculations were run on an 8 cores Macbook pro, actual performance will be dependent on your system specs.  
 
 
 ## Getting Started
@@ -38,10 +38,11 @@ From your terminal window:
 
 ### Run a simulation
 
-To run the example we used earlier simply type:
-`tripledraw -s ‘’ -d 0 -t J`
+To run the example we used earlier simply type:  
+`tripledraw -s '' -d 0 -t J`
 
-For more examples and help type `tripledraw --help`
+For more examples and help type:  
+`tripledraw --help`
 
 
 ## Uninstall
