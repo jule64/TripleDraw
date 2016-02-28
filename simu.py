@@ -7,11 +7,11 @@ from deck import Deck
 class SimuBuilder(object):
 
     def __init__(self):
-        self.startingCards = ''
-        self.numberDraws = 3
-        self.target = 'J'
-        self.simulations = 50000
-        self._MAXCARDS = 5
+        self.startingCards = None
+        self.numberDraws = None
+        self.target = None
+        self.simulations = None
+        self.MAXCARDS = None
 
     def setStartingCards(self, s):
         self.startingCards = s
@@ -32,7 +32,7 @@ class SimuBuilder(object):
         return self
 
     def build(self):
-        return Simu(self.startingCards, self.numberDraws, self.target, self.simulations,self._MAXCARDS)
+        return Simu(self.startingCards, self.numberDraws, self.target, self.simulations, self.MAXCARDS)
 
 
 class Simu(object):
@@ -49,7 +49,7 @@ class Simu(object):
         self.nDraws=d
         self.targ=t
         self.nSimu=r
-        self._MAXCARDS=m
+        self.MAXCARDS=m
 
 
 
@@ -70,7 +70,7 @@ class Simu(object):
 
             for v in range(self.nDraws):
                 residualCards = s1.run(intHand)
-                intHand=residualCards+self.convertHandToIntegers(deck,deck.retrieve(self._MAXCARDS-len(residualCards)))
+                intHand=residualCards+self.convertHandToIntegers(deck, deck.retrieve(self.MAXCARDS - len(residualCards)))
 
 
             # at the end of the draws we check the hand one last time to see if we reached the target
