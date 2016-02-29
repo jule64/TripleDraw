@@ -1,0 +1,5 @@
+
+
+
+class UnsurportedInputValueException(RuntimeError):
+    pass
