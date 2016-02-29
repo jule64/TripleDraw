@@ -18,11 +18,13 @@ As such it is important to note that TripleDraw is not a calculator but a simula
 
 From your terminal window:
 
-`git clone git@github.com:jule64/TripleDraw.git`
+```
+git clone git@github.com:jule64/TripleDraw.git
 
-`cd TripleDraw`
+cd TripleDraw
 
-`pip install --editable .`
+pip install --editable .
+```
 
 
 The last step will install dependencies and create a `tripledraw` script which you can call from anywhere in your command line.
