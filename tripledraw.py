@@ -80,7 +80,7 @@ def run_single_threaded(starting_cards, number_of_draws, target, simulations):
     print "Running {} simulations into a single thread".format(simulations)
     simulator = build_simulator(starting_cards, number_of_draws, target, simulations)
     result = simulator.launch()
-    report_results(starting_cards, target, simulations, result)
+    report_results(starting_cards, number_of_draws, target, simulations, result)
 
 
 def run_multi_procs(starting_cards, number_of_draws, target, simulations, numberProcs):
@@ -108,7 +108,7 @@ def run_multi_procs(starting_cards, number_of_draws, target, simulations, number
 
     mergedResults = math.fsum(procsResults) / numberProcs
 
-    report_results(starting_cards, target, simulations, mergedResults)
+    report_results(starting_cards, number_of_draws, target, simulations, mergedResults)
 
 
 def runner(queue,simulator):
@@ -116,22 +116,22 @@ def runner(queue,simulator):
     queue.put(result)
 
 
-def report_results(starting_cards, target, simulations, results):
+def report_results(starting_cards, number_of_draws, target, simulations, results):
     # pretty prints the results
 
     results_percent=results * 100
 
-    result_record=[starting_cards,target+' low',str(simulations),str(results_percent)]
-    headers = ['starting cards','target','simulations','odds (%)']
+    result_record=[starting_cards,str(number_of_draws), target+' low',str(simulations),str(results_percent)]
+    headers = ['starting cards','nb draws','target hand','simulations','odds (%)']
     collist = tuple([i for i in range(headers.__len__() + 1)])
     # this sets the initial column width based on the width of the headers
     colwidth = dict(zip(collist,(len(str(x)) for x in headers)))
     # if the width of our values is longer than the corresponding header's we update that column's width
     colwidth.update(( i, max(colwidth[i],len(el)) ) for i,el in enumerate(result_record))
-    width_pattern = ' | '.join('%%-%ss' % colwidth[i] for i in xrange(0,4))
+    width_pattern = ' | '.join('%%-%ss' % colwidth[i] for i in xrange(0,5))
 
     # note the lists are converted into tuples in order to apply width_pattern onto them
-    print '\n','\n'.join((width_pattern % tuple(headers),'-|-'.join( colwidth[i]*'-' for i in xrange(4)),''.join(width_pattern % tuple(result_record))))
+    print '\n','\n'.join((width_pattern % tuple(headers),'-|-'.join( colwidth[i]*'-' for i in xrange(5)),''.join(width_pattern % tuple(result_record))))
 
 
 

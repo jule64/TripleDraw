@@ -39,9 +39,9 @@ This will print the result as follow
 
 
 ```
-starting cards | target | simulations | odds (%)
----------------|--------|-------------|---------
-any            | J low  | 50000       | 9.556
+starting cards | nb draws | target hand | simulations | odds (%)
+---------------|----------|-------------|-------------|---------
+any            | 0        | A low       | 1000        | 49.9    
 ```
 
 Of course you can also study more advanced scenaarios, such adding one, two or three draws and specify starting cards. **In fact setting the number of draws to 1 allows you to study the single draw variant of the game!**  
