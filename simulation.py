@@ -21,11 +21,9 @@ class SimulationBuilder(object):
         self.numberDraws = d
         return self
 
-
     def setTarget(self, t):
         self.target = t
         return self
-
 
     def setSimulations(self, r):
         self.simulations = r
@@ -49,8 +47,6 @@ class Simulation(object):
         self.target_rank=t
         self.number_simulations=r
         self.MAX_CARDS_IN_HAND=m
-
-
 
     def launch(self):
 
@@ -76,19 +72,16 @@ class Simulation(object):
                 new_hand = [deck.get_card() for c in range(self.MAX_CARDS_IN_HAND - len(retained_cards))]
                 integer_hand=retained_cards+self.convert_cards_to_integers(deck, new_hand)
 
-
             # at the end of the last draw we check the final hand to see if we hit the target
-            issuccess=card_rules.apply_rules(integer_hand, True)
+            card_rules.set_final_check()
+            issuccess=card_rules.apply_rules(integer_hand)
 
             if issuccess:
                 success_count+=1
 
         return (success_count+0.0)/self.number_simulations
 
-
-
     def get_starting_hand(self, deck, starting_cards):
-
 
         starting_hand = []
 
@@ -103,8 +96,6 @@ class Simulation(object):
                     raise Exception('Incorrect card format. Please ensure cards are separated by + signs'
                                     'and are 2 characters')
 
-
-
             # we assume well formatted 2 chars cards for now
             for c in tpcards:
                 starting_hand.append(c)
@@ -117,7 +108,6 @@ class Simulation(object):
         return starting_hand
 
     def convert_cards_to_integers(self, deck, starting_hand):
-
         return [deck.cards_to_int_dict[j] for j in starting_hand]
 
 

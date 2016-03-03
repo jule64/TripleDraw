@@ -77,7 +77,7 @@ def main(starting_cards, number_of_draws, target, simulations, number_procs):
 
 
 def run_single_threaded(starting_cards, number_of_draws, target, simulations):
-    print "Running {} simulations into a single thread".format(simulations)
+    print "Running {:,} simulations (single threaded mode)".format(simulations)
     simulator = build_simulator(starting_cards, number_of_draws, target, simulations)
     result = simulator.launch()
     report_results(starting_cards, number_of_draws, target, simulations, result)
@@ -85,9 +85,9 @@ def run_single_threaded(starting_cards, number_of_draws, target, simulations):
 
 def run_multi_procs(starting_cards, number_of_draws, target, simulations, numberProcs):
     # logger.info('Dispatching %s simulations to %s parallel workers',simulations, numberProcs)
-    print 'Dispatching {} simulations to {} parallel workers'.format(simulations, numberProcs)
+    print 'Running {:,} simulations using {} parallel workers'.format(simulations, numberProcs)
     simulationsPerProcs= (simulations - simulations % numberProcs) / numberProcs
-    print 'Each parallel worker will process %s simulations'.format(simulationsPerProcs)
+    print 'Each parallel worker will process {} simulations'.format(simulationsPerProcs)
 
     q = Queue()
     jobs = []
@@ -119,9 +119,7 @@ def runner(queue,simulator):
 def report_results(starting_cards, number_of_draws, target, simulations, results):
     # pretty prints the results
 
-    results_percent=results * 100
-
-    result_record=[starting_cards,str(number_of_draws), target+' low',str(simulations),str(results_percent)]
+    result_record=[starting_cards,str(number_of_draws), target+' low','{:,}'.format(simulations),'{0:.2%}'.format(results)]
     headers = ['starting cards','nb draws','target hand','simulations','odds (%)']
     collist = tuple([i for i in range(headers.__len__() + 1)])
     # this sets the initial column width based on the width of the headers
@@ -150,9 +148,9 @@ if __name__ == '__main__':
     # the defaults in the decorators setup in main()
     main(default_map={
         'simulations': 1000,
-        'number_procs':0,
+        'number_procs':1,
         'number_of_draws':0,
         'starting_cards':'',
-        'target':'A'
+        'target':'J'
     })
 

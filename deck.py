@@ -51,41 +51,24 @@ class Deck(object):
             self.cards_to_int_dict[item[1]]=item[0]
 
         # shuffle main deck
-        random.shuffle(self.cards)
+        # random.shuffle(self.cards)
         
         #the below results in dict of ranks only:
         #{'A': 12, '10': 8, 'K': 11, 'J': 9, 'Q': 10, ...}
         self.rankstonum = [(j,i) for i,j in enumerate(self.ranks)]
         self.rankstonum_dict = dict(self.rankstonum)
 
-
-
-        
         self._deck=[]
 
-    
-    def reset(self,seq=None):
-        
-        warnings.warn("deprecated")
 
-
-    def retrieve(self,nbcards):
-        '''
-        return a list of card numbers from the sorted deck
-        and removes those card numbers from the deck
-        '''
-        #TODO: need check that enough cards in deck
-        return [self.cards.pop() for c in range(nbcards)]
-        
     def get_card(self):
         '''
         Retrieves a card from the deck.  Note the deck is already
         shuffled
         :return: card
         '''
-
-        return self.cards.pop()
-
+        cardIndex=random.randint(0,len(self.cards)-1)
+        return self.cards.pop(cardIndex)
 
     def remove_card_from_deck(self, c):
 

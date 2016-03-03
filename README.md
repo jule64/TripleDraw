@@ -80,11 +80,11 @@ The flip side is that simulations contain some degree of imprecision compared to
 
 #### Example
 
-Suppose you wanted to know the odds of being dealt a ***Jack low (or better) pre-flop***.  The mathematical approach gives this scenario a probability of *9.654%*(\*). TripleDraw by contrast gave values of *9.804%*, *9.66%* and *9.57%* in three separate runs using the default 50,000 simulations.  This gives roughly a 0.1% margin of error around the true value, which can be interpreted as *'the odds of being dealt a Jack low pre-flop are "about" 9.6%'*.  
+Suppose you wanted to know the odds of being dealt a ***Jack low (or better) pre-flop***.  The mathematical approach gives this scenario a probability of *9.654%*(\*). TripleDraw by contrast gave values of *9.804%*, *9.66%* and *9.57%* in three separate runs using the default 50,000 simulations, roughly a 0.1% precision around the true value.  Since there is no real advantage in using odds beyond one decimal place in poker, the way one could read these results is to say *'the odds of being dealt a Jack low pre-flop are "about" 10%'*.  
 
-If however you feel those results are too 'wide', you can fix that by simply increasing the number of simulations.  To take our example again we re-ran the same scenario but this time using **1 million** simulations.  The results came back as: *9.653%*, virtually the same as the actual odds.
+If however you feel those results are too "wide", you can fix that by simply increasing the number of simulations.  To take our example again we re-ran the same scenario but this time using **1 million** simulations.  The results came back as: *9.653%*, virtually the same as the actual odds.
 
-Naturally the trade off here is that **in order to get more precision you generally have to give up computing time**.  For instance, the 50k simulations above ran in under a second on my machine, whereas 1 million simulations took about 10 seconds to complete.  Note you can change these parameters by using the `-n` option, for example type `-n 500000` to run five hundred thousand simulations.
+The trade off hence is that *in order to get more precision you generally have to give up computing time*.  For instance, the 50k simulations above ran in under a second on my machine, whereas 1 million simulations took about 10 seconds to complete.  You can change the default number of simulations with the `-n` option, for example `-n 500000` to run five hundred thousand simulations.
 
 
 (\*)*By the way if you want to know how this number is calculated have a look in the `study` folder where I have added all the calculations step by step. Needless to say it's a lot of equations, and that's only for a simple pre-flop probability.  By contrast the simulations-style approach of TripleDraw means no complex maths are required :)*
