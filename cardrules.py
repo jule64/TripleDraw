@@ -1,25 +1,21 @@
 import sys
 
 
-class Strategy(object):
+class CardRules(object):
 
-    def __init__(self, target=9):
-        '''
-        params should say wether the aim is to draw 7 low
-        or 9 low etc
-        '''
-        self.target=target
+    def __init__(self):
         self.issuccess=True
-        
-        
+
     def reset(self):
         self.issuccess=True
-        
 
-    def run(self,seq,finalcheck=False):
+    def set_target(self,target):
+        self.target=target
+
+    def apply_rules(self, seq, finalcheck=False):
         
         '''
-        passes the sequence into a series of decision rules
+        passes the int sequence into a series of decision rules
         to determine what cards in the sequence to keep and
         returns a sequence of cards to keep
         '''

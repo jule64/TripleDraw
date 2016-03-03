@@ -1,10 +1,10 @@
 
 from multiprocessing import Process, Queue, cpu_count
 import click
-from simu import SimuBuilder
+from simulation import SimulationBuilder
 import math
 import logging
-
+from colors import red
 
 
 help_msgs={'starting-cards':    'Any number of predefined cards to have in your starting hand. '
@@ -57,12 +57,17 @@ def main(starting_cards, number_of_draws, target, simulations, number_procs):
 
     **************************************************************************
     """
-    if(starting_cards != ''):
-        print '[!] Simulation Aborted:  Adding starting cards is not currently supported.  Apologies'
-        return
-    if(target!='J'):
-        print "[!] Simulation Aborted:  Only Jack low target (J) is currently supported.  Apologies"
-        return
+    # if(starting_cards != ''):
+    #     print '[!] Simulation Aborted:  Adding starting cards is not currently supported.  Apologies'
+    #     return
+    # if(target!='J'):
+    #     print "[!] Simulation Aborted:  Only Jack low target (J) is currently supported.  Apologies"
+    #     return
+
+    if(starting_cards <> '' and number_of_draws==0):
+        print red('>>> Warning: you are using starting card(s) with 0 draws.  '
+                  'You should use at least one draw when you provide starting cards')
+
 
 
     if(number_procs<=1):
@@ -72,16 +77,17 @@ def main(starting_cards, number_of_draws, target, simulations, number_procs):
 
 
 def run_single_threaded(starting_cards, number_of_draws, target, simulations):
-    logger.info('Running %s simulations into a single thread',simulations)
+    print "Running {} simulations into a single thread".format(simulations)
     simulator = build_simulator(starting_cards, number_of_draws, target, simulations)
-    result = simulator.run()
+    result = simulator.launch()
     report_results(starting_cards, target, simulations, result)
 
 
 def run_multi_procs(starting_cards, number_of_draws, target, simulations, numberProcs):
-    logger.info('Dispatching %s simulations to %s parallel workers',simulations, numberProcs)
+    # logger.info('Dispatching %s simulations to %s parallel workers',simulations, numberProcs)
+    print 'Dispatching {} simulations to {} parallel workers'.format(simulations, numberProcs)
     simulationsPerProcs= (simulations - simulations % numberProcs) / numberProcs
-    logger.info('Each parallel worker will process %s simulations',simulationsPerProcs)
+    print 'Each parallel worker will process %s simulations'.format(simulationsPerProcs)
 
     q = Queue()
     jobs = []
@@ -106,30 +112,31 @@ def run_multi_procs(starting_cards, number_of_draws, target, simulations, number
 
 
 def runner(queue,simulator):
-    result = simulator.run()
+    result = simulator.launch()
     queue.put(result)
 
 
 def report_results(starting_cards, target, simulations, results):
-    resultsPercent=results * 100
+    # pretty prints the results
 
-    # pretty printing the results
-    resultRecord=[starting_cards,target+' low',str(simulations),str(resultsPercent)]
+    results_percent=results * 100
+
+    result_record=[starting_cards,target+' low',str(simulations),str(results_percent)]
     headers = ['starting cards','target','simulations','odds (%)']
     collist = tuple([i for i in range(headers.__len__() + 1)])
     # this sets the initial column width based on the width of the headers
     colwidth = dict(zip(collist,(len(str(x)) for x in headers)))
     # if the width of our values is longer than the corresponding header's we update that column's width
-    colwidth.update(( i, max(colwidth[i],len(el)) ) for i,el in enumerate(resultRecord))
-    widthpattern = ' | '.join('%%-%ss' % colwidth[i] for i in xrange(0,4))
+    colwidth.update(( i, max(colwidth[i],len(el)) ) for i,el in enumerate(result_record))
+    width_pattern = ' | '.join('%%-%ss' % colwidth[i] for i in xrange(0,4))
 
-    # note the lists are converted into tuples in order to apply widthpattern onto them
-    print '\n','\n'.join((widthpattern % tuple(headers),'-|-'.join( colwidth[i]*'-' for i in xrange(4)),''.join(widthpattern % tuple(resultRecord))))
+    # note the lists are converted into tuples in order to apply width_pattern onto them
+    print '\n','\n'.join((width_pattern % tuple(headers),'-|-'.join( colwidth[i]*'-' for i in xrange(4)),''.join(width_pattern % tuple(result_record))))
 
 
 
 def build_simulator(starting_cards, number_of_draws, target, simulations):
-    return SimuBuilder() \
+    return SimulationBuilder() \
         .setStartingCards(starting_cards) \
         .setNumberOfDraws(number_of_draws) \
         .setTarget(target) \
@@ -139,9 +146,13 @@ def build_simulator(starting_cards, number_of_draws, target, simulations):
 
 if __name__ == '__main__':
 
-    # this gets passed to Click when running/debugging from inside intellij. It avoids messing about with
-    # the defaults decorator setups in main()
+    # The below is used for dev.  The object gets passed to Click to set the defaults. This avoids messing about with
+    # the defaults in the decorators setup in main()
     main(default_map={
-        'simulations': 20000
+        'simulations': 1000,
+        'number_procs':0,
+        'number_of_draws':0,
+        'starting_cards':'',
+        'target':'A'
     })
 

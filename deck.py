@@ -46,10 +46,12 @@ class Deck(object):
         # reverse mapp the all_cards_dict to  create a dict of cards mapped to integer
         # {'9h': 33, '10h': 34,...}
         # note we don't need to sort the  resulting dict
-        self.cardsToIntDict={}
+        self.cards_to_int_dict={}
         for item in self.cardsDict.iteritems():
-            self.cardsToIntDict[item[1]]=item[0]
+            self.cards_to_int_dict[item[1]]=item[0]
 
+        # shuffle main deck
+        random.shuffle(self.cards)
         
         #the below results in dict of ranks only:
         #{'A': 12, '10': 8, 'K': 11, 'J': 9, 'Q': 10, ...}
@@ -75,22 +77,32 @@ class Deck(object):
         #TODO: need check that enough cards in deck
         return [self.cards.pop() for c in range(nbcards)]
         
-    def getCard(self,startingCard=None):
+    def get_card(self):
         '''
-        Retrieves a card randomly from the deck or one matching the specified card param
-
-        :param startingCard: represents a starting card as specified in the --starting-card option in the command line.
+        Retrieves a card from the deck.  Note the deck is already
+        shuffled
         :return: card
         '''
 
-        if(startingCard==None):
-            card = self._retrieveRandomCard()
+        return self.cards.pop()
 
-        else:
-            card = self._retrieveStartingCard(startingCard)
 
-        return card
+    def remove_card_from_deck(self, c):
 
+        try:
+            self.cards.remove(c)
+        except:
+            raise Exception("the card <{}> does not exists.  Please check your starting cards".format(c))
+
+
+
+    def convertCardToInt(self, card):
+        # TODO add sanity check to make sure card string is valid
+        return self.cards_to_int_dict[card]
+
+    def convert_rank_to_int(self, rank):
+        # TODO handle exception when rank is incorrect
+        return self.ranks.index(rank)
 
 
     def _retrieveRandomCard(self):
@@ -114,7 +126,7 @@ class Deck(object):
         if(matchObj==None):
             # no wildcard means user gave a fully specified card
             #TODO this will throw an error if card value was mispecified or duplicated in the commandline
-            self.removeCardFromDeck(sc)
+            self.remove_card_from_deck(sc)
             return sc
         elif(matchObj.group(1)=='*'):
             # we have a color card
@@ -129,9 +141,8 @@ class Deck(object):
 
 
 
-    def removeCardFromDeck(self,sc):
 
-        self.cards.remove(sc)
+
 
 
 
@@ -213,6 +224,14 @@ class Deck(object):
         that have a rank and suit specified, such as '10d' or 'Ac'
         '''
         return [[self._deck_map_reverse_dict[v] for v in seq if v not in self.ranks] for seq in seqs]
+
+
+
+
+
+
+
+
 
 
         

@@ -6,6 +6,7 @@ setup(
         py_module=['tripledraw'],
         install_requires=[
             'click>=4.0',
+            'ansicolors'
         ],
         author='julien monnier',
         author_email='jule64@gmail.com',
