@@ -56,27 +56,22 @@ class Simulation(object):
 
             deck = Deck()
 
-            card_rules=CardRules()
-            card_rules.set_target(deck.convert_rank_to_int(self.target_rank))
+            card_rules=CardRules(deck)
+            card_rules.set_target(self.target_rank)
 
-            starting_hand = self.get_starting_hand(deck, self.starting_cards)
-
-            # required to run CardRules
-            integer_hand=self.convert_cards_to_integers(deck, starting_hand)
+            cards_in_hand = self.get_starting_hand(deck, self.starting_cards)
 
             for v in range(self.number_of_draws):
-                # note these are int cards, not string cards
-                retained_cards = card_rules.apply_rules(integer_hand)
-
+                retained_cards = card_rules.apply_rules(cards_in_hand)
                 #draw additional cards from deck to make a full hand
-                new_hand = [deck.get_card() for c in range(self.MAX_CARDS_IN_HAND - len(retained_cards))]
-                integer_hand=retained_cards+self.convert_cards_to_integers(deck, new_hand)
+                dealer_cards = [deck.get_card() for c in
+                                range(self.MAX_CARDS_IN_HAND - len(retained_cards))]
+                cards_in_hand=retained_cards+dealer_cards
 
             # at the end of the last draw we check the final hand to see if we hit the target
-            card_rules.set_final_check()
-            issuccess=card_rules.apply_rules(integer_hand)
+            is_success=card_rules.is_success(cards_in_hand)
 
-            if issuccess:
+            if is_success:
                 success_count+=1
 
         return (success_count+0.0)/self.number_simulations
@@ -107,8 +102,6 @@ class Simulation(object):
 
         return starting_hand
 
-    def convert_cards_to_integers(self, deck, starting_hand):
-        return [deck.cards_to_int_dict[j] for j in starting_hand]
 
 
 
