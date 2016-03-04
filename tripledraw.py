@@ -69,7 +69,6 @@ def main(starting_cards, number_of_draws, target, simulations, number_procs):
                   'You should use at least one draw when you provide starting cards')
 
 
-
     if(number_procs<=1):
         run_single_threaded(starting_cards, number_of_draws, target, simulations)
     else:
@@ -119,7 +118,7 @@ def runner(queue,simulator):
 def report_results(starting_cards, number_of_draws, target, simulations, results):
     # pretty prints the results
 
-    result_record=[starting_cards,str(number_of_draws), target+' low','{:,}'.format(simulations),'{0:.2%}'.format(results)]
+    result_record=[starting_cards,str(number_of_draws), target+' low','{:,}'.format(simulations),'{0:.6%}'.format(results)]
     headers = ['starting cards','nb draws','target hand','simulations','odds (%)']
     collist = tuple([i for i in range(headers.__len__() + 1)])
     # this sets the initial column width based on the width of the headers
@@ -147,10 +146,10 @@ if __name__ == '__main__':
     # The below is used for dev.  The object gets passed to Click to set the defaults. This avoids messing about with
     # the defaults in the decorators setup in main()
     main(default_map={
-        'simulations': 1000,
+        'simulations': 10000,
         'number_procs':1,
-        'number_of_draws':0,
+        'number_of_draws':1,
         'starting_cards':'',
-        'target':'J'
+        'target':'7'
     })
 
