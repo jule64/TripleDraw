@@ -41,7 +41,7 @@ This will print the result as follow
 ```
 starting cards | nb draws | target hand | simulations | odds (%) 
 ---------------|----------|-------------|-------------|----------
-any               | 0        | J low       | 150,000     | 9.692667%   
+any            | 0        | J low       | 150,000     | 9.692667%   
 ```
 
 Of course you can also study more advanced scenaarios, such adding one, two or three draws and specify starting cards. **In fact setting the number of draws to 1 allows you to study the single draw variant of the game!**  
