@@ -51,11 +51,11 @@ class Simulation(object):
     def launch(self):
 
         success_count = 0
+        deck = Deck()
 
         for u in range(self.number_simulations):
 
-            deck = Deck()
-
+            deck.reset_deck()
             card_rules=CardRules(deck)
             card_rules.set_target(self.target_rank)
 

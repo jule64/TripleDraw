@@ -18,11 +18,8 @@ external classes that depend on that order being as it currently is.
 
 
 import random
-import re
 
 class Deck(object):
-
-
 
     def __init__(self):
         '''
@@ -33,9 +30,9 @@ class Deck(object):
         self.ranks = ['2','3','4','5','6','7','8','9','10','J','Q','K','A']
 
         # create list of all cards sorted by color and rank
-        # ['2c', '3c',...,'Kc',...,'As']
-        self.cards=[i + j for i, j in zip(self.ranks * 4, sorted(self.colors * 13))]
-        
+        # ['2c','3c', '4c',..., 'Js', 'Qs', 'Ks', 'As']
+        self.cards = self.cards=[i + j for i, j in zip(self.ranks * 4, sorted(self.colors * 13))]
+
         # create dict of cards mapped to an integer key, in sorted order
         # {0: '2c', 1: '3c', 2: '4c',...}
         self.int_to_cards_dict = dict(enumerate(self.cards))
@@ -43,19 +40,17 @@ class Deck(object):
         # reverse mapp the all_cards_dict to  create a dict of cards mapped to integer
         # {'9h': 33, '10h': 34,...}
         # note we don't need to sort the  resulting dict
-        self.cards_to_int_dict={}
-        for item in self.int_to_cards_dict.iteritems():
-            self.cards_to_int_dict[item[1]]=item[0]
+        self.cards_to_int_dict=dict([(j,i) for i,j in enumerate(self.cards)])
 
-        # shuffle main deck
-        # random.shuffle(self.cards)
-        
-        #the below results in dict of ranks only:
-        #{'A': 12, '10': 8, 'K': 11, 'J': 9, 'Q': 10, ...}
-        self.rankstonum = [(j,i) for i,j in enumerate(self.ranks)]
-        self.rankstonum_dict = dict(self.rankstonum)
-
-        self._deck=[]
+    def reset_deck(self):
+        # note the zip function was used initially but profiling showed it was taking almost 30% of total runtime!
+        # so instead we use a static array
+        self.cards=[
+            '2c','3c', '4c', '5c', '6c', '7c', '8c', '9c', '10c', 'Jc', 'Qc', 'Kc', 'Ac',
+            '2d', '3d', '4d', '5d', '6d', '7d', '8d', '9d', '10d', 'Jd', 'Qd', 'Kd', 'Ad',
+            '2h', '3h', '4h', '5h', '6h', '7h', '8h', '9h', '10h', 'Jh', 'Qh', 'Kh', 'Ah',
+            '2s', '3s', '4s', '5s', '6s', '7s', '8s', '9s', '10s', 'Js', 'Qs', 'Ks', 'As'
+        ]
 
 
     def get_card(self):
