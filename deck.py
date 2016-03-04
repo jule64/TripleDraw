@@ -3,25 +3,22 @@ Created on Mar 26, 2013
 
 @author: jule64@gmail.com
 
+Instantiates a deck of cards and provides methods for accessing
+those cards.
 
+The main deck list is ordered on ranks and suits as follow:
+['2c', '3c', 'Qc',...,'3d', '4d', ..., '10h', 'Jh', ..., 'Ks', 'As']
 
-Sorted Deck Mapping:
-{0: '2c', 1: '3c', 2: '4c', 3: '5c', 4: '6c', 5: '7c', 6: '8c', 7: '9c', 8: '10c'
-, 9: 'Jc', 10: 'Qc', 11: 'Kc', 12: 'Ac', 13: '2d', 14: '3d', 15: '4d', 16: '5d'
-, 17: '6d', 18: '7d', 19: '8d', 20: '9d', 21: '10d', 22: 'Jd', 23: 'Qd', 24: 'Kd'
-, 25: 'Ad', 26: '2h', 27: '3h', 28: '4h', 29: '5h', 30: '6h', 31: '7h', 32: '8h'
-, 33: '9h', 34: '10h', 35: 'Jh', 36: 'Qh', 37: 'Kh', 38: 'Ah', 39: '2s', 40: '3s'
-, 41: '4s', 42: '5s', 43: '6s', 44: '7s', 45: '8s', 46: '9s', 47: '10s', 48: 'Js'
-, 49: 'Qs', 50: 'Ks', 51: 'As'}
-
+Important: !!Semantic dependencies!!
+Classes such as CardRules are dependent on how the cards are ordered in
+the deck in this class.  Hence you should NOT change the current order
+of cards in the deck or it will create unpredictable behaviour in those
+external classes that depend on that order being as it currently is.
 '''
 
 
 import random
-import warnings
 import re
-
-
 
 class Deck(object):
 
@@ -41,13 +38,13 @@ class Deck(object):
         
         # create dict of cards mapped to an integer key, in sorted order
         # {0: '2c', 1: '3c', 2: '4c',...}
-        self.cardsDict = dict(enumerate(self.cards))
+        self.int_to_cards_dict = dict(enumerate(self.cards))
 
         # reverse mapp the all_cards_dict to  create a dict of cards mapped to integer
         # {'9h': 33, '10h': 34,...}
         # note we don't need to sort the  resulting dict
         self.cards_to_int_dict={}
-        for item in self.cardsDict.iteritems():
+        for item in self.int_to_cards_dict.iteritems():
             self.cards_to_int_dict[item[1]]=item[0]
 
         # shuffle main deck
@@ -63,154 +60,25 @@ class Deck(object):
 
     def get_card(self):
         '''
-        Retrieves a card from the deck.  Note the deck is already
-        shuffled
+        Retrieves a random card from the deck
         :return: card
         '''
-        cardIndex=random.randint(0,len(self.cards)-1)
+        # TODO based on profiler results, random number generation take up about 20% of
+        # runtime.  One way to optimise could be to create some kind of random number service that
+        # runs in its own process and specialises in providing random numbers to worker processes.
+        # Perhaps that would speed up calculations
+        cardIndex=int(random.random()*len(self.cards))
         return self.cards.pop(cardIndex)
 
     def remove_card_from_deck(self, c):
-
         try:
             self.cards.remove(c)
         except:
             raise Exception("the card <{}> does not exists.  Please check your starting cards".format(c))
 
-
-
-    def convertCardToInt(self, card):
-        # TODO add sanity check to make sure card string is valid
-        return self.cards_to_int_dict[card]
-
     def convert_rank_to_int(self, rank):
         # TODO handle exception when rank is incorrect
         return self.ranks.index(rank)
-
-
-    def _retrieveRandomCard(self):
-
-        cardIndex=random.randint(0,len(self.cards)-1)
-        card = self.cards.pop(cardIndex)
-        return card
-
-    def _removeCardFromDeck(self,card):
-        self.cards.pop()
-
-
-    def _retrieveStartingCard(self, sc):
-
-        rankPat='^(.)(\*)$'
-        colorPat='^(\*)(.)$'
-        rankOrColorPat=re.compile(colorPat+'|'+rankPat)
-
-        matchObj=re.match(rankOrColorPat,sc)
-
-        if(matchObj==None):
-            # no wildcard means user gave a fully specified card
-            #TODO this will throw an error if card value was mispecified or duplicated in the commandline
-            self.remove_card_from_deck(sc)
-            return sc
-        elif(matchObj.group(1)=='*'):
-            # we have a color card
-            #TODO implement retrieve for wildcard cards
-            pass
-        else:
-            # we have a rank card
-            pass
-
-
-
-
-
-
-
-
-
-
-
-    def get_sequences(self,seqs=[[]]):
-        '''
-        returns sequences of card numbers associated to the card values
-        in seqs.  If a card value only specify a rank then retrieve
-        a corresponding card number from same rank from a randomly sorted
-        deck.
-        Removes the selected cards numbers from the deck before returning
-        the result.
-        The deck is saved as a field of Deck for use in the draw steps. 
-        '''
-        
-        drev=self._deck_map_reverse_list
-        drevd=self._deck_map_reverse_dict
-        
-        fullcards=self._getfullcards(drevd, seqs)
-        rankcards=self._getrankcards(seqs)
-                
-        fullcardsmerge=[i for o in fullcards for i in o]
-       
-        #I believe this should be a queue that holds random sequences
-        #already generated during idle mode 
-        randdeck=random.sample(range(52),52)
-        tree=self._gettree(randdeck,fullcardsmerge)
-        
-
-        anysuitcardsseqs=self._getanysuitcardsseqs(tree,rankcards)
-
-        fin_seqs=self._getfinseqs(fullcards,anysuitcardsseqs)
-        
-        tp_list=[j for seq in fin_seqs for j in seq]
-        
-        self._deck=self._getremainingdeck(tp_list,randdeck)
-        
-        return fin_seqs
-        
-    
-    def _getremainingdeck(self,tp_list,randdeck):
-        '''return the cards in deck excluding the cards
-        in tp_list 
-        '''
-        return filter(lambda x: x not in tp_list,randdeck)    
-
-
-    def _gettree(self,randdeck,fullcardsmerge):
-        '''create a tree of card numbers grouped by rank and randomly sorted within each group
-        and map those group to their respective ranks
-        '''
-        tp_range=range(13)
-        return [(v,(lambda v: (i for i in randdeck if i % 13 == v and i not in fullcardsmerge))(v)) for v in tp_range]
-
-    
-    def _getfinseqs(self,fullcards,anysuitcardsseqs):
-        '''merges the two partial sequences while keeping
-        the original list structure
-        '''
-        tp_fc_len=fullcards.__len__()
-        return [anysuitcardsseqs[i]+fullcards[i] for i in range(tp_fc_len)]
-    
-    
-    def _getanysuitcardsseqs(self,tree,rankcards):
-        '''retrieve a card number from tree having same rank
-        as the cards in rankcards
-        '''
-        return [[j.next() for v,j in tree for i in seq if i==v] for seq in rankcards]
-        
-        
-    def _getrankcards(self,seqs):
-        '''retrieve rank numbers associated to the card values in seqs
-        that only have a rank specified such as 'K' or 'J' or '7'
-        '''
-        return [[self.rankstonum_dict[i] for i in seq if i in self.ranks] for seq in seqs]
-    
-    
-    def _getfullcards(self,drevd,seqs):
-        '''retrieve card numbers associated to the card values in seqs
-        that have a rank and suit specified, such as '10d' or 'Ac'
-        '''
-        return [[self._deck_map_reverse_dict[v] for v in seq if v not in self.ranks] for seq in seqs]
-
-
-
-
 
 
 
