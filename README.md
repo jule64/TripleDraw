@@ -6,7 +6,8 @@ TripleDraw :dart:
 
 
 ### Background Info
-I created this project primarily to brush up my Python programming skills and learn to manage an open source project end to end.  It is free to use however I do not provide guarantees as to the accuracy of the tool.  See also [disclaimer](#diclaimer) section below.
+
+The main goal of this project was to create a Python app that uses some advanced Python programming techniques such as multiprocessing, decorators, lambdas and matplotlib charting while also learning more about poker and cards probabilities.   While it is free to use and copy, I do not provide guarantees as to the accuracy of the tool.  See full [disclaimer](#diclaimer) at the end of this document.
 
 
 ### Introduction
@@ -45,7 +46,7 @@ This will print the result as follow
 ```
 starting cards | nb draws | target hand | simulations | odds (%) 
 ---------------|----------|-------------|-------------|----------
-any            | 0        | J low       | 150,000     | 9.692667%   
+any            | 0        | J low       | 50,000      | 9.692667%   
 ```
 
 Of course you can also study more advanced scenaarios, such adding one, two or three draws and specify starting cards. **In fact setting the number of draws to 1 allows you to study the single draw variant of the game!**  
@@ -64,9 +65,10 @@ If you are on Windows the installation step might be a little different but it s
 
 ### Performance
 
-TripleDraw uses parallel processing to distribute the simulations amongst worker processes.  This allows us to achieve decent sub second performances at the default 50,000 simulations(\*).  You can set the number of worker processes manually using the `--number-procs` option.  
+TripleDraw's performance will be highly depend on the number of cores on your machine as well as the complexity of the scenarios being evaluated.  For example, 50,000 simulations can be run in under 0.5 seconds in a simple no draw scenario using 8 cores machine.  1 million simulation will run in less than 4 seconds under the same scenario.  However, in a three draws scenario, these performances drop to 1 seconds and 8 seconds respectively(\*).  
+You can set the number of worker/cores to use by setting the `--number-procs` option.  
 
-*(*\**) Tested on a MacBook pro with 8 virtual cores. Actual performances may vary depending on your system's specs.*
+*(*\**) Tested on a MacBook pro with 8 virtual cores.*
 
 
 
@@ -88,7 +90,7 @@ Suppose you wanted to know the odds of being dealt a ***Jack low (or better) pre
 
 If however you feel those results are too "wide", you can fix that by simply increasing the number of simulations.  To take our example again we re-ran the same scenario but this time using **1 million** simulations.  The results came back as: *9.653%*, virtually the same as the actual odds.
 
-The trade off hence is that *in order to get more precision you generally have to give up computing time*.  For instance, the 50k simulations above ran in under a second on my machine, whereas 1 million simulations took about 10 seconds to complete.  You can change the default number of simulations with the `-n` option, for example `-n 500000` to run five hundred thousand simulations.
+Precision however comes at the cost of longer running simulations, and it is up to you to balance out this constraint with your own requirements.  Note to change the default number of simulations use the `-n` option, for example `-n 500000` to run five hundred thousand simulations.
 
 
 (\*)*By the way if you want to know how this number is calculated have a look in the `study` folder where I have added all the calculations step by step. Needless to say it's a lot of equations, and that's only for a simple pre-flop probability.  By contrast the simulations-style approach of TripleDraw means no complex maths are required :)*
