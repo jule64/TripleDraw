@@ -62,14 +62,16 @@ The `--plot True` option takes snapshots of the simulation at various stages of 
 
 The black lines show the simulation values for each worker process and the red line shows the consolidated values.  The last data point on the red line is the simulation result and its value is highlighted in red in the chart.
 
+**Odds of drawing to 9 Low after 3 draws:**
 ![9low3draws](./study/img/9low_after_3draws.png)
-**Odds of drawing to 9 Low after 3 draws**  
+
   
 
+**Odds of drawing to 7 Low pre flop:**  
 The chart below shows the results of a *7 low preflop* scenario.  The interesting saw-like shape of this chart is caused by the very low probability of event.  
 
 ![9low3draws](./study/img/7low_preflop.png)
-**Odds of drawing to 7 Low pre flop**
+
 
 
 
