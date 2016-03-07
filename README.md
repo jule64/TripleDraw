@@ -7,7 +7,7 @@ TripleDraw :dart:
 
 ### Before You Start
 
-The main goal of this project was to create a Python app that uses some advanced Python programming techniques such as multiprocessing, decorators, lambdas and matplotlib charting while also learning more about poker and cards probabilities.   While it is free to use and copy, I do not provide guarantees as to the accuracy of the tool.  See full [disclaimer](#diclaimer) at the end of this document.
+The main goal of this project was to build a Python app that uses some advanced Python programming techniques such as multiprocessing, decorators, lambdas and matplotlib charting while also learning more about poker and card probabilities.   It is 100% free to use, copy and modify however it does not come with any warranties.  See full [disclaimer](#disclaimer) at the end of this document.
 
 
 ### Introduction
