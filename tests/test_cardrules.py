@@ -14,54 +14,54 @@ class CardRulesFinalCheckTests(unittest.TestCase):
     def test_reject_straight(self):
         self.card_rules.set_target('J')
         hand = ['7s','9c','10c','8s','Jd']
-        self.assertFalse(self.card_rules.is_success(hand))
+        self.assertFalse(self.card_rules.check_success(hand))
 
     def test_reject_flush(self):
         self.card_rules.set_target('9')
         hand = ['7c','9c','6c','5c','2c']
-        self.assertFalse(self.card_rules.is_success(hand))
+        self.assertFalse(self.card_rules.check_success(hand))
 
     def test_reject_pairs(self):
         self.card_rules.set_target('8')
         hand = ['7c','8c','7s','5c','2c']
-        self.assertFalse(self.card_rules.is_success(hand))
+        self.assertFalse(self.card_rules.check_success(hand))
 
     def test_reject_trips(self):
         self.card_rules.set_target('8')
         hand = ['7c','7d','7s','5c','2c']
-        self.assertFalse(self.card_rules.is_success(hand))
+        self.assertFalse(self.card_rules.check_success(hand))
 
     def test_reject_quads(self):
         self.card_rules.set_target('8')
         hand = ['5h','5d','5s','5c','2c']
-        self.assertFalse(self.card_rules.is_success(hand))
+        self.assertFalse(self.card_rules.check_success(hand))
 
     def test_reject_full_house(self):
         self.card_rules.set_target('8')
         hand = ['5h','5d','5s','2c','2h']
-        self.assertFalse(self.card_rules.is_success(hand))
+        self.assertFalse(self.card_rules.check_success(hand))
 
     def test_reject_high_cards(self):
         # one high card
         self.card_rules.set_target('10')
         hand = ['7c','9c','Js','5c','2c']
-        self.assertFalse(self.card_rules.is_success(hand))
+        self.assertFalse(self.card_rules.check_success(hand))
 
         # two high cards
         self.card_rules.set_target('8')
         hand = ['7c','9c','Js','5h','Kc']
-        self.assertFalse(self.card_rules.is_success(hand))
+        self.assertFalse(self.card_rules.check_success(hand))
 
     def test_accept_valid_hand(self):
         # valid with highest card == target
         self.card_rules.set_target('10')
         hand = ['7c','9c','10s','5h','8c']
-        self.assertTrue(self.card_rules.is_success(hand))
+        self.assertTrue(self.card_rules.check_success(hand))
 
         # valid with highest card < target
         self.card_rules.set_target('10')
         hand = ['7c','9c','2s','5h','8c']
-        self.assertTrue(self.card_rules.is_success(hand))
+        self.assertTrue(self.card_rules.check_success(hand))
 
 
 class CardRulesCardsRemovalTests(unittest.TestCase):
@@ -111,6 +111,6 @@ class CardRulesCardsRemovalTests(unittest.TestCase):
         self.card_rules.set_target('J')
         hand = ['10c','8c','5c','6c','4c']
         retained_cards = self.card_rules.apply_rules(hand)
-        expected_cards = ['10c','8c','5c','6c','4c']
+        expected_cards = ['10c','5c','6c','4c']
 
         self.assertTrue(set(retained_cards)==set(expected_cards))

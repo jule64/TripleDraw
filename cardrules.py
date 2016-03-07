@@ -7,16 +7,12 @@ class CardRules(object):
 
     def __init__(self, deck):
         self.deck = deck
-        self.check_success = False
-        self.issuccess=True
 
     def set_target(self,target_rank):
-        self.integer_target_rank=self.deck.convert_rank_to_int(target_rank)
+        self.integer_target_rank=cardutils.convert_rank_to_int(target_rank,self.deck)
 
     def apply_rules(self, hand):
-        
-        '''
-        Runs the cards in the hand through a series of decision rules
+        '''Runs the cards in the hand through a series of decision rules
         to determine which cards to keep and then return a list of only
         those cards that were retained.
 
@@ -25,13 +21,11 @@ class CardRules(object):
 
         teststraight=True
         testflush=True
-
         straightindex=0
         flushindex=0
 
         # Converting the hand to integers in order to apply the
-        # decision rules.  This follow the integer to card mapping defined
-        # in deck, such that '2c' is integer 0, '3c' is integer 1, etc.
+        # decision rules.
         integer_hand = cardutils.convert_cards_to_integers(hand,self.deck)
 
         # order cards in integer_hand by rank regardless of suit,
@@ -40,18 +34,13 @@ class CardRules(object):
         temp_list.sort()
         rank_ordered_integer_hand=[c for i, c in temp_list]
 
-
         #first remove any card which rank is greater than the target rank
         for card_index,card in enumerate(rank_ordered_integer_hand):
-
             if card%13 > self.integer_target_rank:
-                if(self.check_success):
-                    # we have a high card in the hand hence no need to carry on
-                    return False
                 #mark card rejected
                 rank_ordered_integer_hand[card_index]=None
 
-                #since there are less than 5 valid cards we don't need to test for straight and flush
+                #since there is at least one invalid card we don't need to test for straight and flush
                 teststraight=False
                 testflush=False
                 continue
@@ -64,17 +53,11 @@ class CardRules(object):
         if(len(rank_ordered_integer_hand)>1):
             #of the cards left we check for paired cards, straights and flushes
             for card_index,card in enumerate(rank_ordered_integer_hand):
-
                 if(card_index==0):
                     continue
-
                 #checking for pairs
                 prev_card = rank_ordered_integer_hand[card_index-1]
                 if card%13==prev_card%13:
-                    if(self.check_success):
-                        # we have a pair in the hand hence no need to carry on
-                        return False
-
                     # find the suit number of the suit most present in the hand (called
                     # dominant suit), it will be used when deciding which card to remove in a pair
                     cards_suits=[c / 13 for c in rank_ordered_integer_hand if c is not None]
@@ -101,9 +84,6 @@ class CardRules(object):
 
                             #if straightindex = 4 this means that the five cards in the hand form a straight
                             if straightindex==4:
-                                if(self.check_success):
-                                    # we have a straight in the hand hence not success
-                                    return False
                                 #remove top card if lowest card is a 2, else remove the 2nd top card
                                 if rank_ordered_integer_hand[0]%13==0:
                                     rank_ordered_integer_hand[4]=None
@@ -111,7 +91,6 @@ class CardRules(object):
                                     rank_ordered_integer_hand[3]=None
                                 flushindex=0
                                 continue
-
                         else:
                             # no risk of a straight hence no need to test anymore
                             teststraight = False
@@ -123,9 +102,6 @@ class CardRules(object):
 
                             # if flushindex = 4 this means that the five cards in the hand form a flush
                             if flushindex==4:
-                                if(self.check_success):
-                                    # we have a flush in the hand hence no need to carry on
-                                    return False
                                 #reject second highest card
                                 #NOTE: in reality there are special cases where it is preferable to throw an other
                                 #card, such as in the case of a 8,7,5,3,2 drawing to a 9 low.
@@ -136,27 +112,33 @@ class CardRules(object):
                             testflush = False
             # <- end of for loop ->
 
-        if not self.check_success:
-            # return only the cards that have been retained
-            if(None in rank_ordered_integer_hand):
-                rank_ordered_integer_hand = [c for c in rank_ordered_integer_hand if c is not None]
-            return cardutils.convert_integer_cards_to_cards(rank_ordered_integer_hand,self.deck)
-        else:
-            # The hand was successful
-            return True
+        if(None in rank_ordered_integer_hand):
+            rank_ordered_integer_hand = [c for c in rank_ordered_integer_hand if c is not None]
+        return cardutils.convert_integer_cards_to_cards(rank_ordered_integer_hand,self.deck)
 
-
-    def set_final_check(self):
-        self.check_success = True
-
-    def is_success(self, cards_in_hand):
+    def check_success(self, cards_in_hand):
         '''
-        Checks whether the hand is a valid triple draw hand or not.
-        Unlike calling `apply_rules(cards_in_hand)` directly, calling this method
-        will NOT modify the list passed to it.
+        Checks if the hand is a valid low ball hand or not.
+        Note unlike `apply_rules(cards_in_hand)` this method
+        does not modify the list passed to it.
 
         :param cards_in_hand:
-        :return: True if the hand is a valid triple draw hand, False if not
+        :return: True if the hand is a valid low ball hand, False if not
         '''
-        self.check_success = True
-        return self.apply_rules(cards_in_hand)
+
+        integer_hand = cardutils.convert_cards_to_integers(cards_in_hand,self.deck)
+
+        # order cards in integer_hand by rank regardless of suit,
+        # e.g. [2c,2s,8d,Js,Jh]
+        temp_list=[(c%13,c) for c in integer_hand]
+        temp_list.sort()
+        rank_ordered_integer_hand=[c for i, c in temp_list]
+
+        if (cardutils.is_high_card(rank_ordered_integer_hand,self.integer_target_rank)
+            or cardutils.is_pair(rank_ordered_integer_hand)
+            or cardutils.is_straight(rank_ordered_integer_hand)
+            or cardutils.is_flush(rank_ordered_integer_hand)):
+            return False
+        else:
+            return True
+

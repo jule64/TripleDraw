@@ -1,57 +1,50 @@
-'''
-Created on Mar 26, 2013
-
-@author: jule64@gmail.com
-
-Instantiates a deck of cards and provides methods for accessing
-those cards.
-
-The main deck list is ordered on ranks and suits as follow:
-['2c', '3c', 'Qc',...,'3d', '4d', ..., '10h', 'Jh', ..., 'Ks', 'As']
-
-Important: !!Semantic dependencies!!
-Classes such as CardRules are dependent on how the cards are ordered in
-the deck in this class.  Hence you should NOT change the current order
-of cards in the deck or it will create unpredictable behaviour in those
-external classes that depend on that order being as it currently is.
-'''
-
-
 import random
 
 class Deck(object):
+    '''Instantiates a deck of cards and provides methods for accessing
+    those cards.
+
+    The main deck/stack list is ordered on ranks and suits as follow:
+    ['2c', '3c', 'Qc',...,'3d', '4d', ..., '10h', 'Jh', ..., 'Ks', 'As']
+
+    Important: !!Semantic dependencies!!
+    Classes such as CardRules are dependent on how the cards in the stack,
+    hence you should NOT change the current order
+    of the cards in the stack or it will create unpredictable behaviour in those
+    external classes.
+    '''
 
     def __init__(self):
-        '''
-        Initialising data structures
+        '''Initialising data structures
         '''
 
         self.colors = ['s','c','d','h']
         self.ranks = ['2','3','4','5','6','7','8','9','10','J','Q','K','A']
 
-        # create list of all cards sorted by color and rank
-        # ['2c','3c', '4c',..., 'Js', 'Qs', 'Ks', 'As']
-        self.cards = self.cards=[i + j for i, j in zip(self.ranks * 4, sorted(self.colors * 13))]
+        # create a list of 52 cards sorted by rank and suit (color).  The list will
+        # always be ordered like so: clubs> diamonds > hearts > spades
+        # ['2c','3c', '4c',.,'Jd',..,'8h'..., 'Ks', 'As']
+        #
+        # Note for performance reasons the list is generated only once and
+        # public methods access a copy of it named `cards`. See `initialise()`
+        self.__template_card_stack = [i + j for i, j in zip(self.ranks * 4, sorted(self.colors * 13))]
 
         # create dict of cards mapped to an integer key, in sorted order
         # {0: '2c', 1: '3c', 2: '4c',...}
-        self.int_to_cards_dict = dict(enumerate(self.cards))
+        self.int_to_cards_dict = dict(enumerate(self.__template_card_stack))
 
-        # reverse mapp the all_cards_dict to  create a dict of cards mapped to integer
+        # create a dict of cards to integer based on the order of the template stack
         # {'9h': 33, '10h': 34,...}
         # note we don't need to sort the  resulting dict
-        self.cards_to_int_dict=dict([(j,i) for i,j in enumerate(self.cards)])
+        self.cards_to_int_dict=dict([(j,i) for i,j in enumerate(self.__template_card_stack)])
 
-    def reset_deck(self):
-        # note the zip function was used initially but profiling showed it was taking almost 30% of total runtime!
-        # so instead we use a static array
-        self.cards=[
-            '2c','3c', '4c', '5c', '6c', '7c', '8c', '9c', '10c', 'Jc', 'Qc', 'Kc', 'Ac',
-            '2d', '3d', '4d', '5d', '6d', '7d', '8d', '9d', '10d', 'Jd', 'Qd', 'Kd', 'Ad',
-            '2h', '3h', '4h', '5h', '6h', '7h', '8h', '9h', '10h', 'Jh', 'Qh', 'Kh', 'Ah',
-            '2s', '3s', '4s', '5s', '6s', '7s', '8s', '9s', '10s', 'Js', 'Qs', 'Ks', 'As'
-        ]
-
+    def initialise(self):
+        '''creates a new list of 52 cards
+        :return: void
+        '''
+        # note for performance reasons we copy the main cards list instead of re-creating
+        # a new list from scratch
+        self.card_stack= self.__template_card_stack[:]
 
     def get_card(self):
         '''
@@ -62,20 +55,14 @@ class Deck(object):
         # runtime.  One way to optimise could be to create some kind of random number service that
         # runs in its own process and specialises in providing random numbers to worker processes.
         # Perhaps that would speed up calculations
-        cardIndex=int(random.random()*len(self.cards))
-        return self.cards.pop(cardIndex)
+        cardIndex=int(random.random() * len(self.card_stack))
+        return self.card_stack.pop(cardIndex)
 
     def remove_card_from_deck(self, c):
         try:
-            self.cards.remove(c)
+            self.card_stack.remove(c)
         except:
-            raise Exception("the card <{}> does not exists.  Please check your starting cards".format(c))
-
-    def convert_rank_to_int(self, rank):
-        # TODO handle exception when rank is incorrect
-        return self.ranks.index(rank)
-
-
+            raise Exception("the card <{}> does not exists".format(c))
 
 
 
