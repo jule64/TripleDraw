@@ -56,6 +56,23 @@ The help menu shows you how to run simulations in more details:
 `tripledraw --help`
 
 
+### Charting
+
+The `--plot True` option takes snapshots of the simulation at various stages of the compuation and renders the intermediate results in a time series chart.  This is interesting to see how the simulation converges to its final reported value.  
+
+The black lines show the simulation values for each worker process and the red line shows the consolidated values.  The last data point on the red line is the simulation result and its value is highlighted in red in the chart.
+
+![9low3draws](./study/img/9low_after_3draws.png)
+**Odds of drawing to 9 Low after 3 draws**  
+  
+
+The chart below shows the results of a *7 low preflop* scenario.  The interesting saw-like shape of this chart is caused by the very low probability of event.  
+
+![9low3draws](./study/img/7low_preflop.png)
+**Odds of drawing to 7 Low pre flop**
+
+
+
 ### System Requirements
 
 TripleDraw should work on any version of **OSX** and **linux/ubuntu** with **python 2 or 3** installed.  
