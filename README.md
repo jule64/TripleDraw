@@ -5,7 +5,7 @@ TripleDraw :dart:
 **TripleDraw is a command line utility for studying cards probabilities in the games of 2-7 Triple Draw And Single Draw (poker)**
 
 
-### Background Info
+### Before You Start
 
 The main goal of this project was to create a Python app that uses some advanced Python programming techniques such as multiprocessing, decorators, lambdas and matplotlib charting while also learning more about poker and cards probabilities.   While it is free to use and copy, I do not provide guarantees as to the accuracy of the tool.  See full [disclaimer](#diclaimer) at the end of this document.
 
