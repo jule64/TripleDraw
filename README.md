@@ -84,15 +84,14 @@ If you are on Windows the installation step might be a little different but it s
 
 ### Performance
 
-TripleDraw's performance will highly depend on the number of cores on your machine as well as the complexity of the scenarios being evaluated.  For example, 100,000 simulations should run in under 0.4 seconds in parallel mode (on 8 cores macbook).  1 million simulation will run in about 4 seconds under the same scenario.  However, in a three draws scenario, these performances drop to 1 seconds and about 8 seconds respectively(\*).  
+TripleDraw's performance will highly depend on the number of cores on your machine as well as the complexity of the scenarios being evaluated.  For example, 100,000 simulations should run in under 0.4 seconds in parallel mode (on 8 cores macbook).  1 million simulation will run in about 4 seconds under the same scenario.  However, in a three draws scenario, these performances drop to 1 seconds and about 8 seconds respectively. Note You can set the number of worker/cores to use by setting the `--number-procs` option.  
 
-Additionally, you might want to try running TripleDraw with PyPy instead of standard Python.  PyPy is an optimised Python interpreter that can significantly speed up your program with no change in your source code at all, it's a great project check it out (http://pypy.org/).  And in the case of TripleDraw, the performance gain is rather compelling:
+Additionally, you might want to try to run TripleDraw with **PyPy** (http://pypy.org/).  PyPy is an optimised Python interpreter that can significantly speed up your program without changing any of your code.  In our case, a large simulation will run over 4 times faster with PyPy vs CPython, it's very impressive:
 
-**Triple with PyPy vs CPython:**
+**1 million simulations using PyPy vs CPython:**
 ![Pypytest](./study/img/pypy-v-cpython.jpg)  
-   
-
-Note You can set the number of worker/cores to use by setting the `--number-procs` option.  
+  
+  
 
 
 ### Uninstall
