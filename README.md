@@ -2,7 +2,7 @@ TripleDraw :dart:
 ================
 
 
-**TripleDraw is a command line utility for studying cards probabilities in the games of 2-7 Triple Draw And Single Draw (poker)**
+**TripleDraw is a command line utility for studying card probabilities in the games of 2-7 Triple Draw And Single Draw (poker)**
 
 
 ### Before You Start
@@ -49,7 +49,7 @@ starting cards | nb draws | target hand | simulations | odds (%)
 any            | 0        | J low       | 50,000      | 9.692667%   
 ```
 
-Of course you can also study more advanced scenaarios, such adding one, two or three draws and specify starting cards. **In fact setting the number of draws to 1 allows you to study the single draw variant of the game!**  
+Of course you can also study more advanced scenarios, such adding one, two or three draws and specify starting cards. **In fact setting the number of draws to 1 allows you to study the single draw variant of the game!**  
 
 The help menu shows you how to run simulations in more details:  
 
@@ -58,7 +58,7 @@ The help menu shows you how to run simulations in more details:
 
 ### Charting
 
-The `--plot True` option takes snapshots of the simulation at various stages of the compuation and renders the intermediate results in a time series chart.  This is interesting to see how the simulation converges to its final reported value.  
+The `--plot` option takes snapshots of the simulation at various stages of the computation and renders these values in a time series chart.  This is interesting to see how the simulation converges to its final result.  
 
 The black lines show the simulation values for each worker process and the red line shows the consolidated values.  The last data point on the red line is the simulation result and its value is highlighted in red in the chart.
 
@@ -68,17 +68,9 @@ The black lines show the simulation values for each worker process and the red l
   
 
 **Odds of drawing to 7 Low pre flop:**  
-The chart below shows the results of a *7 low preflop* scenario.  The interesting saw-like shape of this chart is caused by the very low probability of event.  
+The chart below shows the results of a *7 low preflop* scenario.  Since this is a rare hand to draw preflop we end up with this interesting 'saw'-shaped chart.  
 
 ![9low3draws](./study/img/7low_preflop.png)
-
-
-
-
-### System Requirements
-
-TripleDraw should work on any version of **OSX** and **linux/ubuntu** with **python 2 or 3** installed.  
-If you are on Windows the installation step might be a little different but it should still work once installed.
 
 
 
@@ -93,6 +85,12 @@ Additionally, you might want to try to run TripleDraw with **PyPy** (http://pypy
   
   
 
+### System Requirements
+
+TripleDraw should work on any version of **OSX** and **linux/ubuntu** with **python 2 or 3** installed.  
+If you are on Windows the installation step might be a little different but it should still work once installed.
+
+
 
 ### Uninstall
 
@@ -103,7 +101,7 @@ Additionally, you might want to try to run TripleDraw with **PyPy** (http://pypy
 ### Understanding TripleDraw Results
 
 The big advantage of using simulations is that it allows to evaluate complex scenarios without using complex maths, unlike you would using probabilistic calculations.
-The flip side is that simulations contain some degree of imprecision compared to the actual probabilities of the evaluated scenarios.  Let's look at an example to illustrate this point and see how to minize this problem with TripleDraw.
+The flip side is that simulations contain some degree of imprecision compared to the actual probabilities of the evaluated scenarios.  Let's look at an example to illustrate this point and see how to minimize this problem with TripleDraw.
 
 
 #### Example
@@ -121,7 +119,7 @@ Precision however comes at the cost of longer running simulations, and it is up 
 ### Finally
 
 
-If you have any questions or suggestions please feel free to raise an issue or contact me at jule64 at gmail dot com.
+If you have any questions or suggestions please feel free to raise an issue or contact me at jule64(at)gmail(dot)com.
 
 Contributions are welcome!
 
