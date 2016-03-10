@@ -7,7 +7,7 @@ TripleDraw :dart:
 
 ### Before You Start
 
-The main goal of this project was to build a Python app that uses some advanced Python programming techniques such as multiprocessing, decorators, lambdas and matplotlib charting while also learning more about poker and card probabilities.   It is 100% free to use, copy and modify however like any open source project no warranties are provided, see full [disclaimer](#disclaimer) at the end of this document.
+The main goal of this project was to build a Python app that uses some advanced Python programming techniques such as multiprocessing, decorators, lambdas and matplotlib charting while also learning more about poker and card probabilities.   It is free to use, copy and modify, however no warranties are provided as per the standard open source [licence disclaimer](#disclaimer) at the end of this document.
 
 
 ### Introduction
@@ -78,7 +78,7 @@ The chart below shows the results of a *7 low preflop* scenario.  Since this is 
 
 TripleDraw's performance will highly depend on the number of cores on your machine as well as the complexity of the scenarios being evaluated.  For example, 100,000 simulations should run in under 0.4 seconds in parallel mode (on 8 cores macbook).  1 million simulation will run in about 4 seconds under the same scenario.  However, in a three draws scenario, these performances drop to 1 seconds and about 8 seconds respectively. Note You can set the number of worker/cores to use by setting the `--procs` option.  
 
-Additionally, you might want to try to run TripleDraw with **PyPy** (http://pypy.org/).  PyPy is an optimised Python interpreter that can significantly speed up your program without changing any of your code.  In our case, a large simulation will run over 4 times faster with PyPy vs CPython, it's very impressive:
+Additionally, you might want to try to run TripleDraw with **PyPy** (http://pypy.org/).  PyPy is an optimised Python interpreter that can significantly speed up your program without changing any of your code.  In our case, a large simulation will run **over 4 times faster with PyPy** than with regular CPython, see for yourself, the difference is impressive:
 
 **1 million simulations using PyPy vs CPython:**  
 ![Pypytest](./img/pypy-v-cpython.jpg)  
