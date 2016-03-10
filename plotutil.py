@@ -1,16 +1,15 @@
-import_ploting_libs_ok=True
-
 from colors import red
-try:
-    import matplotlib.pyplot as plt
-    import matplotlib.patches as mpatches
-except Exception:
-    import_ploting_libs_ok=False
+
 
 def plot_simulation_results(results, nb_simul, nb_workers):
-    if(not import_ploting_libs_ok):
-        print red('>>> Warning: matplotlib is required for charting.  Please install using `pip install matplotlib`')
-        return
+    """Plots a time series chart of a simulation."""
+
+    try:
+        import matplotlib.pyplot as plt
+        import matplotlib.patches as mpatches
+    except ImportError:
+        print red('>>> Info: matplotlib is required for charting.  Please install using `pip install matplotlib`')
+        return None
 
     l_list=len(results[0])
     h_list=len(results)
@@ -29,16 +28,22 @@ def plot_simulation_results(results, nb_simul, nb_workers):
     plt.text(l_list, merged_results[l_list - 1], '{0:.2%}'.format(merged_results[l_list - 1]), color='red')
 
     # legends
-    red_patch = mpatches.Patch(color='red', label='Merged stages',linewidth=2)
-    black_patch = mpatches.Patch(color='black', label='Per-worker stages',linewidth=1)
-    plt.legend(handles=[black_patch,red_patch],loc=4)
+    red_patch = mpatches.Patch(color='red', label='consolidated results',linewidth=2)
+    black_patch = mpatches.Patch(color='black', label='workers results',linewidth=1)
+
+    # determine best place to put legend on screen
+    if (merged_results[l_list - 1]/plt.get_current_fig_manager().canvas.figure.axes[0].dataLim.y1)<0.4:
+        location=1 # legend on top right corner
+    else:
+        location=4 # legend on bottom right corner
+    plt.legend(handles=[black_patch,red_patch],loc=location)
+
     plt.title('Simulation Stages\n({:,} simulations dispatched to {} workers)'.format(nb_simul,nb_workers),fontsize=12,fontweight='bold')
     plt.xlabel('simulations (100s)',fontsize=12,fontweight='bold')
     plt.ylabel('odds (%)',fontsize=12,fontweight='bold')
 
     # styling
     plt.style.use('ggplot')
-    # plt.xscale('log')
 
     # display chart
     plt.show()
