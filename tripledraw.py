@@ -2,7 +2,7 @@ from multiprocessing import cpu_count
 
 import click
 
-from helputil import help_msgs
+from helputil import help_msgs, init_logger
 from simulation import SimulationManager
 
 
@@ -28,6 +28,7 @@ def main(starting_cards, draws, target, simulations, procs, plot):
     **************************************************************************
     """
 
+    init_logger()
     s = SimulationManager(starting_cards, draws, target, simulations, procs, plot)
     s.run_simulation()
 
@@ -35,6 +36,13 @@ def main(starting_cards, draws, target, simulations, procs, plot):
 if __name__ == '__main__':
     # The below is used for dev.  The `default_map` object gets passed to Click to set the defaults.
     # This avoids messing about with the defaults in the Click decorators in main()
-    main()
+    main(default_map={
+        'simulations': 10000,
+        'procs':2,
+        'draws':0,
+        'starting_cards':'',
+        'target':'8',
+        'plot':True,
+    })
 
 

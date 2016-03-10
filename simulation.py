@@ -1,12 +1,11 @@
 import datetime
 import math
-from multiprocessing import Queue, Process
-
+from multiprocessing import Queue, Process, process
 from colors import red, blue
-
 import plotutil
 from cardrules import CardRules
 from deck import Deck
+import logging
 
 
 class Simulation(object):
@@ -25,15 +24,23 @@ class Simulation(object):
         self._intermediate_results = []
         self._simulation_result = None
 
+
     def launch(self):
         '''
         Runs a simulation
         :return: double: the ratio of successful hands over total hands
         '''
+
+        # We adjust the number of intermediary results we collect for the charts based on the size of a simulation.
+        # This ultimately reduces the number of data to load in the charts enabling faster loading
+        self.collect_frequency = 100 + 100* (self.number_simulations/100000)
+        logging.info('{}: Plot data will be collected every {} runs'.
+                     format(process.current_process().name, self.collect_frequency))
+
         success_count = 0
         deck = Deck()
 
-        for u in xrange(self.number_simulations):
+        for sim_nb in xrange(self.number_simulations):
             deck.initialise()
             card_rules=CardRules(deck)
             card_rules.set_target(self.target_rank)
@@ -50,9 +57,9 @@ class Simulation(object):
             # at the end of the last draw we check the final hand to see if we hit the target
             is_success=card_rules.check_success(cards_in_hand)
             if is_success:
-                success_count+=1
-            if self.is_plot and u>0 and u%100==0:
-                self._intermediate_results.append((success_count + 0.0) / u)
+                success_count += 1
+            if self.is_plot and sim_nb % self.collect_frequency == 0 and sim_nb > 0:
+                self._intermediate_results.append((success_count + 0.0) / sim_nb)
 
         self._simulation_result = (success_count+0.0)/self.number_simulations
         return None
@@ -96,6 +103,10 @@ class SimulationManager:
         if self.starting_cards != '' and self.draws == 0:
             print red('>>> Warning: you are using starting card(s) with 0 draws.  '
                       'You should use at least one draw when you provide starting cards')
+
+        if self.simulations < 1000:
+            print red('>>> Error: please choose a number of simulations greater than 1,000')
+            return None
         if self.procs <= 1:
             self.run_single_threaded()
         else:
@@ -114,14 +125,19 @@ class SimulationManager:
 
     def run_parallel(self):
 
-        def runner(queue, simulation, plot):
+        def proc_simu_runner(queue, simulation, plot):
+            logging.info(process.current_process().name + ' about to launch simulation')
             simulation.launch()
             result = simulation.result
+            logging.info(process.current_process().name + ' collected simulation result')
             if plot:
                 plot_data = simulation.intermediate_results
+                logging.info(process.current_process().name + ' collected plot data')
                 queue.put([result, plot_data])
+                logging.info(process.current_process().name + ' added data in queue')
             else:
                 queue.put(result)
+                logging.info(process.current_process().name + ' added data in queue')
 
         print 'Running {:,} simulations using {} parallel workers'.format(self.simulations, self.procs)
         simulations_per_proc= (self.simulations - self.simulations % self.procs) / self.procs
@@ -132,7 +148,7 @@ class SimulationManager:
         jobs = []
         for i in range(self.procs):
             simulation = Simulation(self.starting_cards, self.draws, self.target, simulations_per_proc, self.plot)
-            p = Process(target=runner, args=(q, simulation, self.plot))
+            p = Process(target=proc_simu_runner, args=(q, simulation, self.plot))
             jobs.append(p)
             p.start()
 
