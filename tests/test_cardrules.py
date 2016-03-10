@@ -75,7 +75,6 @@ class CardRulesCardsRemovalTests(unittest.TestCase):
         hand = ['7c','9c','Js','Kh','8c']
         retained_cards = self.card_rules.apply_rules(hand)
         expected_cards = ['7c','9c','8c']
-
         self.assertTrue(set(retained_cards)==set(expected_cards))
 
 
@@ -85,7 +84,6 @@ class CardRulesCardsRemovalTests(unittest.TestCase):
         hand = ['7c','9c','9s','6h','8c']
         retained_cards = self.card_rules.apply_rules(hand)
         expected_cards = ['7c','9s','6h','8c']
-
         self.assertTrue(set(retained_cards)==set(expected_cards))
 
 
@@ -96,7 +94,6 @@ class CardRulesCardsRemovalTests(unittest.TestCase):
         hand = ['7c','9c','9s','6s','8h']
         retained_cards = self.card_rules.apply_rules(hand)
         expected_cards = ['7c','9c','6s','8h']
-
         self.assertTrue(set(retained_cards)==set(expected_cards))
 
     def test_remove_second_high_card_given_a_straight(self):
@@ -104,7 +101,6 @@ class CardRulesCardsRemovalTests(unittest.TestCase):
         hand = ['8c','7c','5s','6s','4h']
         retained_cards = self.card_rules.apply_rules(hand)
         expected_cards = ['8c','5s','6s','4h']
-
         self.assertTrue(set(retained_cards)==set(expected_cards))
 
     def test_remove_second_high_card_given_a_flush(self):
@@ -112,5 +108,4 @@ class CardRulesCardsRemovalTests(unittest.TestCase):
         hand = ['10c','8c','5c','6c','4c']
         retained_cards = self.card_rules.apply_rules(hand)
         expected_cards = ['10c','5c','6c','4c']
-
         self.assertTrue(set(retained_cards)==set(expected_cards))
