@@ -7,7 +7,7 @@ TripleDraw :dart:
 
 ### Before You Start
 
-The main goal of this project was to build a Python app that uses some advanced Python programming techniques such as multiprocessing, decorators, lambdas and matplotlib charting while also learning more about poker and card probabilities.   It is 100% free to use, copy and modify however it does not come with any warranties.  See full [disclaimer](#disclaimer) at the end of this document.
+The main goal of this project was to build a Python app that uses some advanced Python programming techniques such as multiprocessing, decorators, lambdas and matplotlib charting while also learning more about poker and card probabilities.   It is 100% free to use, copy and modify however like any open source project no warranties are provided, see full [disclaimer](#disclaimer) at the end of this document.
 
 
 ### Introduction
@@ -38,7 +38,7 @@ The last step will install dependencies and create a `tripledraw` script which y
 
 The below line will evaluate the odds of being dealt a *Jack low (or better) pre-flop*:
 
-`tripledraw -starting-cards '' -number-of-draws 0 -target J`
+`tripledraw --starting-cards '' --draws 0 --target J`
 
 This will print the result as follow  
 
@@ -46,7 +46,7 @@ This will print the result as follow
 ```
 starting cards | nb draws | target hand | simulations | odds (%) 
 ---------------|----------|-------------|-------------|----------
-any            | 0        | J low       | 50,000      | 9.692667%   
+any            | 0        | J low       | 100,000      | 9.692667%   
 ```
 
 Of course you can also study more advanced scenarios, such adding one, two or three draws and specify starting cards. **In fact setting the number of draws to 1 allows you to study the single draw variant of the game!**  
@@ -76,7 +76,7 @@ The chart below shows the results of a *7 low preflop* scenario.  Since this is 
 
 ### Performance
 
-TripleDraw's performance will highly depend on the number of cores on your machine as well as the complexity of the scenarios being evaluated.  For example, 100,000 simulations should run in under 0.4 seconds in parallel mode (on 8 cores macbook).  1 million simulation will run in about 4 seconds under the same scenario.  However, in a three draws scenario, these performances drop to 1 seconds and about 8 seconds respectively. Note You can set the number of worker/cores to use by setting the `--number-procs` option.  
+TripleDraw's performance will highly depend on the number of cores on your machine as well as the complexity of the scenarios being evaluated.  For example, 100,000 simulations should run in under 0.4 seconds in parallel mode (on 8 cores macbook).  1 million simulation will run in about 4 seconds under the same scenario.  However, in a three draws scenario, these performances drop to 1 seconds and about 8 seconds respectively. Note You can set the number of worker/cores to use by setting the `--procs` option.  
 
 Additionally, you might want to try to run TripleDraw with **PyPy** (http://pypy.org/).  PyPy is an optimised Python interpreter that can significantly speed up your program without changing any of your code.  In our case, a large simulation will run over 4 times faster with PyPy vs CPython, it's very impressive:
 
