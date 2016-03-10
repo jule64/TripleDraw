@@ -63,14 +63,14 @@ The `--plot` option takes snapshots of the simulation at various stages of the c
 The black lines show the simulation values for each worker process and the red line shows the consolidated values.  The last data point on the red line is the simulation result and its value is highlighted in red in the chart.
 
 **Odds of drawing to 9 Low after 3 draws:**
-![9low3draws](./study/img/9low_after_3draws.png)
+![9low3draws](./img/9low_after_3draws.png)
 
   
 
 **Odds of drawing to 7 Low pre flop:**  
 The chart below shows the results of a *7 low preflop* scenario.  Since this is a rare hand to draw preflop we end up with this interesting 'saw'-shaped chart.  
 
-![9low3draws](./study/img/7low_preflop.png)
+![9low3draws](./img/7low_preflop.png)
 
 
 
@@ -81,7 +81,7 @@ TripleDraw's performance will highly depend on the number of cores on your machi
 Additionally, you might want to try to run TripleDraw with **PyPy** (http://pypy.org/).  PyPy is an optimised Python interpreter that can significantly speed up your program without changing any of your code.  In our case, a large simulation will run over 4 times faster with PyPy vs CPython, it's very impressive:
 
 **1 million simulations using PyPy vs CPython:**
-![Pypytest](./study/img/pypy-v-cpython.jpg)  
+![Pypytest](./img/pypy-v-cpython.jpg)  
   
   
 
