@@ -4,54 +4,21 @@ from cardrules import CardRules
 from deck import Deck
 
 
-# only coded this to play with builder pattern
-class SimulationBuilder(object):
-
-    def __init__(self):
-        self.starting_cards = None #string
-        self.number_draws = None #int
-        self.target = None #string
-        self.simulations = None #int
-        self.MAXCARDS = 5 # max number of cards a player can hold
-
-    def set_starting_cards(self, s):
-        self.starting_cards = s
-        return self
-
-    def set_number_of_draws(self, d):
-        self.number_draws = d
-        return self
-
-    def set_target(self, t):
-        self.target = t
-        return self
-
-    def set_simulations(self, r):
-        self.simulations = r
-        return self
-
-    def set_plot(self,is_plot):
-        self.is_plot = is_plot
-        return self
-
-    def build(self):
-        return Simulation(self.starting_cards, self.number_draws, self.target, self.simulations, self.MAXCARDS, self.is_plot)
-
-
 class Simulation(object):
     '''
     The main simulation object
-    Use SimulationBuilder to build this class safely
     '''
 
-    def __init__(self,s,d,t,r,m,is_plot):
+    def __init__(self,starting_cards=None, number_draws=None, target=None, simulations=None, plot=None):
 
-        self.starting_cards=s
-        self.number_of_draws=d
-        self.target_rank=t
-        self.number_simulations=r
-        self.MAX_CARDS_IN_HAND=m
-        self.is_plot = is_plot
+        self.starting_cards=starting_cards
+        self.number_of_draws=number_draws
+        self.target_rank=target
+        self.number_simulations=simulations
+        self.is_plot = plot
+        self.MAX_CARDS_IN_HAND=5
+        self._intermediate_results = []
+        self._simulation_result = None
 
     def launch(self):
         '''
@@ -60,8 +27,6 @@ class Simulation(object):
         '''
         success_count = 0
         deck = Deck()
-        if self.is_plot:
-            plot_list = []
 
         for u in xrange(self.number_simulations):
             deck.initialise()
@@ -82,13 +47,10 @@ class Simulation(object):
             if is_success:
                 success_count+=1
             if self.is_plot and u>0 and u%100==0:
-                plot_list.append((success_count+0.0)/u)
+                self._intermediate_results.append((success_count + 0.0) / u)
 
-
-        if self.is_plot:
-            return (success_count+0.0)/self.number_simulations,plot_list
-        else:
-            return (success_count+0.0)/self.number_simulations
+        self._simulation_result = (success_count+0.0)/self.number_simulations
+        return None
 
     def get_starting_hand(self, deck, starting_cards):
         starting_hand = []
@@ -109,7 +71,13 @@ class Simulation(object):
             starting_hand.append(deck.get_card())
         return starting_hand
 
+    @property
+    def result(self):
+        return self._simulation_result
 
+    @property
+    def intermediate_results(self):
+        return self._intermediate_results
 
 
 
