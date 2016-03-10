@@ -1,4 +1,4 @@
-
+import logging
 
 
 def help_msgs(key):
@@ -19,3 +19,9 @@ def help_msgs(key):
           'plot':              'displays a chart showing how the simulation\'s results are converging to their '
                                'final value (Parallel mode only)'}
     return msgs[key]
+
+
+def init_logger():
+    FORMAT = '%(asctime)-15s %(message)s'
+    LEVEL = logging.ERROR
+    logging.basicConfig(format=FORMAT, level=LEVEL)
