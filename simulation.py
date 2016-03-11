@@ -13,7 +13,8 @@ class Simulation(object):
     The main simulation object
     '''
 
-    def __init__(self,starting_cards=None, number_draws=None, target=None, simulations=None, plot=None):
+    def __init__(self,starting_cards=None, number_draws=None, target=None, simulations=None,
+                 plot=None, collect_frequency=None):
 
         self.starting_cards=starting_cards
         self.number_of_draws=number_draws
@@ -23,6 +24,7 @@ class Simulation(object):
         self.MAX_CARDS_IN_HAND=5
         self._intermediate_results = []
         self._simulation_result = None
+        self.collect_frequency = collect_frequency
 
 
     def launch(self):
@@ -30,12 +32,6 @@ class Simulation(object):
         Runs a simulation
         :return: double: the ratio of successful hands over total hands
         '''
-
-        # We adjust the number of intermediary results we collect for the charts based on the size of a simulation.
-        # This ultimately reduces the number of data to load in the charts enabling faster loading
-        self.collect_frequency = 100 + 100* (self.number_simulations/100000)
-        logging.info('{}: Plot data will be collected every {} runs'.
-                     format(process.current_process().name, self.collect_frequency))
 
         success_count = 0
         deck = Deck()
@@ -140,14 +136,16 @@ class SimulationManager:
                 logging.info(process.current_process().name + ' added data in queue')
 
         print 'Running {:,} simulations using {} parallel workers'.format(self.simulations, self.procs)
-        simulations_per_proc= (self.simulations - self.simulations % self.procs) / self.procs
+        simulations_per_proc = (self.simulations - self.simulations % self.procs) / self.procs
         print 'Each parallel worker will process {:,} simulations'.format(simulations_per_proc)
+
+        collect_frequency = plotutil.collect_frequency(self.simulations, self.procs)
 
         exec_start = datetime.datetime.now()
         q = Queue()
         jobs = []
         for i in range(self.procs):
-            simulation = Simulation(self.starting_cards, self.draws, self.target, simulations_per_proc, self.plot)
+            simulation = Simulation(self.starting_cards, self.draws, self.target, simulations_per_proc, self.plot, collect_frequency)
             p = Process(target=proc_simu_runner, args=(q, simulation, self.plot))
             jobs.append(p)
             p.start()
