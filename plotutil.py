@@ -39,7 +39,7 @@ def plot_simulation_results(results, nb_simul, nb_workers):
     plt.legend(handles=[black_patch,red_patch],loc=location)
 
     plt.title('Simulation Stages\n({:,} simulations dispatched to {} workers)'.format(nb_simul,nb_workers),fontsize=12,fontweight='bold')
-    plt.xlabel('simulations ({}s)'.format(100 + 100 * (nb_simul/nb_workers/100000)),fontsize=12,fontweight='bold')
+    plt.xlabel('simulations ({}s)'.format(collect_frequency(nb_simul)),fontsize=12,fontweight='bold')
     plt.ylabel('odds (%)',fontsize=12,fontweight='bold')
 
     # styling
@@ -49,7 +49,7 @@ def plot_simulation_results(results, nb_simul, nb_workers):
     plt.show()
 
 
-def collect_frequency(simulations, procs):
+def collect_frequency(simulations):
     """
     Calculates the frequency at which sub processes should collect intermediary results for plotting
     This is done to ensure that the total number of data points loaded in the charts do not exceed
@@ -61,6 +61,4 @@ def collect_frequency(simulations, procs):
     # The + 100 at the end is added to ensure that the frequency is rounded to the higher 100s
     # to ensure the total number of collections cannot be higher than 5000
     cf = ((simulations / max_data_points_to_load)/100)*100 + 100
-    logging.info('Plot data will be collected every {} runs'.
-                 format(cf))
     return cf
