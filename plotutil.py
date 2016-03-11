@@ -31,8 +31,12 @@ def plot_simulation_results(results, nb_simul, nb_workers):
     red_patch = mpatches.Patch(color='red', label='consolidated results',linewidth=2)
     black_patch = mpatches.Patch(color='black', label='workers results',linewidth=1)
 
-    # determine best place to put legend on screen
-    if (merged_results[l_list - 1]/plt.get_current_fig_manager().canvas.figure.axes[0].dataLim.y1)<0.4:
+    # determine best place to put legend on screen. If the right part of the chart
+    # occupies the lower 35% of the frame then put legend on top right corner.
+    # If not, put it on the bottom right corner (most common case)
+    lower_bound_y = plt.get_current_fig_manager().canvas.figure.axes[0].dataLim.min[1]
+    higher_bound_y = plt.get_current_fig_manager().canvas.figure.axes[0].dataLim.max[1]
+    if (merged_results[l_list - 1]-lower_bound_y)/(higher_bound_y-lower_bound_y) < 0.35:
         location=1 # legend on top right corner
     else:
         location=4 # legend on bottom right corner
@@ -58,7 +62,7 @@ def collect_frequency(simulations):
 
     max_data_points_to_load = 5000     # the max number of data points we allow in the charts
 
-    # The + 100 at the end is added to ensure that the frequency is rounded to the higher 100s
-    # to ensure the total number of collections cannot be higher than 5000
+    # The + 100 at the end is added to round the frequency to the higher 100s.
+    # This is done to ensure that the total number of data points collected is never more than 5000
     cf = ((simulations / max_data_points_to_load)/100)*100 + 100
     return cf

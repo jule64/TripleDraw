@@ -60,7 +60,7 @@ The help menu shows you how to run simulations in more details:
 
 The `--plot` option takes snapshots of the simulation at various stages of the computation and renders these values in a time series chart.  This is interesting to see how the simulation converges to its final result.  
 
-The black lines show the simulation values for each worker process and the red line shows the consolidated values.  The last data point on the red line is the simulation result and its value is highlighted in red in the chart.
+The black lines show the simulation values for each worker process and the red line shows the consolidated values.  The last data point on the red line is the simulation result and its value is printed in red in the chart.
 
 **Odds of drawing to 9 Low after 3 draws:**  
 ![9low3draws](./img/9low_after_3draws.png)
