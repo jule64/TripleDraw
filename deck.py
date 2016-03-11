@@ -55,8 +55,8 @@ class Deck(object):
         # runtime.  One way to optimise could be to create some kind of random number service that
         # runs in its own process and specialises in providing random numbers to worker processes.
         # Perhaps that would speed up calculations
-        cardIndex=int(random.random() * len(self.card_stack))
-        return self.card_stack.pop(cardIndex)
+        card_index=int(random.random() * len(self.card_stack))
+        return self.card_stack.pop(card_index)
 
     def remove_card_from_deck(self, c):
         try:

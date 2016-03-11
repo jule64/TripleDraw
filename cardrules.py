@@ -12,12 +12,12 @@ class CardRules(object):
         self.integer_target_rank=cardutils.convert_rank_to_int(target_rank,self.deck)
 
     def apply_rules(self, hand):
-        '''Runs the cards in the hand through a series of decision rules
+        """Runs the cards in the hand through a series of decision rules
         to determine which cards to keep and then return a list of only
         those cards that were retained.
 
         @:returns retained_cards or True/False on last check
-        '''
+        """
 
         teststraight=True
         testflush=True
@@ -60,11 +60,11 @@ class CardRules(object):
                 if card%13==prev_card%13:
                     # find the suit number of the suit most present in the hand (called
                     # dominant suit), it will be used when deciding which card to remove in a pair
-                    cards_suits=[c / 13 for c in rank_ordered_integer_hand if c is not None]
+                    cards_suits=[c // 13 for c in rank_ordered_integer_hand if c is not None]
                     dominant_suit=max([(cards_suits.count(i),i) for i in range(4)])[1]
 
                     #check if card belongs to the dominant suit
-                    if card/13==dominant_suit:
+                    if card//13==dominant_suit:
                         #swap card with prev_card and mark card rejected
                         rank_ordered_integer_hand[card_index - 1]=None
                         rank_ordered_integer_hand[card_index]=prev_card
@@ -97,7 +97,7 @@ class CardRules(object):
 
                     if testflush:
                         # we test if card and prev_card have same suit (color)
-                        if card/12==prev_card/12:
+                        if card//12==prev_card//12:
                             flushindex+=1
 
                             # if flushindex = 4 this means that the five cards in the hand form a flush

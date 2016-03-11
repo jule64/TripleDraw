@@ -2,6 +2,8 @@
 '''Some utility methods to convert cards to and from
 integer values
 '''
+from functools import reduce
+
 
 def convert_cards_to_integers(starting_hand, deck):
     return [deck.cards_to_int_dict[j] for j in starting_hand]
@@ -35,7 +37,7 @@ def is_flush(hand):
         if x[0] is None:
             x[0]=y
             return x
-        if(x[1] is True and y/12==x[0]/12):
+        if(x[1] is True and y//12 == x[0]//12):
             x[0]=y
             return x
         x[1]=False

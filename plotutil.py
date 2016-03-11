@@ -8,7 +8,7 @@ def plot_simulation_results(results, nb_simul, nb_workers):
         import matplotlib.pyplot as plt
         import matplotlib.patches as mpatches
     except ImportError:
-        print red('>>> Info: matplotlib is required for charting.  Please install using `pip install matplotlib`')
+        print(red('>>> Info: matplotlib is required for charting.  Please install using `pip install matplotlib`'))
         return None
 
     l_list=len(results[0])
@@ -31,7 +31,7 @@ def plot_simulation_results(results, nb_simul, nb_workers):
     red_patch = mpatches.Patch(color='red', label='consolidated results',linewidth=2)
     black_patch = mpatches.Patch(color='black', label='workers results',linewidth=1)
 
-    # determine best place to put legend on screen. If the right part of the chart
+    # determine best place to put legend on chart. If the right part of the chart
     # occupies the lower 35% of the frame then put legend on top right corner.
     # If not, put it on the bottom right corner (most common case)
     lower_bound_y = plt.get_current_fig_manager().canvas.figure.axes[0].dataLim.min[1]
@@ -43,7 +43,8 @@ def plot_simulation_results(results, nb_simul, nb_workers):
     plt.legend(handles=[black_patch,red_patch],loc=location)
 
     plt.title('Simulation Stages\n({:,} simulations dispatched to {} workers)'.format(nb_simul,nb_workers),fontsize=12,fontweight='bold')
-    plt.xlabel('simulations ({}s)'.format(collect_frequency(nb_simul)),fontsize=12,fontweight='bold')
+    freq = collect_frequency(nb_simul)
+    plt.xlabel('simulations ({}s)'.format(freq),fontsize=12,fontweight='bold')
     plt.ylabel('odds (%)',fontsize=12,fontweight='bold')
 
     # styling
@@ -64,5 +65,6 @@ def collect_frequency(simulations):
 
     # The + 100 at the end is added to round the frequency to the higher 100s.
     # This is done to ensure that the total number of data points collected is never more than 5000
-    cf = ((simulations / max_data_points_to_load)/100)*100 + 100
+    cf = ((simulations // max_data_points_to_load)//100)*100 + 100
     return cf
+
