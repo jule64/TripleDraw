@@ -79,12 +79,14 @@ The chart below shows the results of a *7 low preflop* scenario.  Since this is 
 
 
 **Big simulation (just for fun!)**  
-And finally we run an 800k simulation using **50 workers**, just because it looks cool :)  
+And finally we plot an 800k simulation using **50 workers**, just because it looks cool :)  
 
 ![50workers](./img/50procs.png)
 
 
 ### Performance
+
+**UPDATE**:  We have now ported our code to **Python 3**, hence you are not able to use *Pypy* with TripleDraw anymore as Pypy runs only on Python 2 code base.  Apologies  
 
 TripleDraw's performance will highly depend on the number of cores on your machine as well as the complexity of the scenarios being evaluated.  For example, 100,000 simulations should run in under 0.4 seconds in parallel mode (on 8 cores macbook).  1 million simulation will run in about 4 seconds under the same scenario.  However, in a three draws scenario, these performances drop to 1 seconds and about 8 seconds respectively. Note You can set the number of worker/cores to use by setting the `--procs` option.  
 
@@ -92,7 +94,6 @@ Additionally, you might want to try to run TripleDraw with **PyPy** (http://pypy
 
 **1 million simulations using PyPy vs CPython:**  
 ![Pypytest](./img/pypy-v-cpython.jpg)  
-  
   
 
 ### System Requirements
