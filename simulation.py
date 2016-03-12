@@ -6,6 +6,7 @@ import plotutil
 from cardrules import CardRules
 from deck import Deck
 import logging
+from concurrent.futures import ProcessPoolExecutor
 
 
 class Simulation(object):
@@ -26,7 +27,7 @@ class Simulation(object):
         self._simulation_result = None
         self.collect_frequency = collect_frequency
 
-    def launch(self):
+    def launch(self, proc_number):
         '''
         Runs a simulation
         :return: double: the ratio of successful hands over total hands
@@ -60,7 +61,7 @@ class Simulation(object):
                 self._intermediate_results.append((success_count) / sim_nb)
 
         self._simulation_result = (success_count)/self.number_simulations
-        return None
+        return self
 
     def get_starting_hand(self, deck, starting_cards):
         starting_hand = []
@@ -105,10 +106,9 @@ class SimulationManager:
         if self.simulations < 1000:
             print(red('>>> Error: please choose a number of simulations greater than 1,000'))
             return None
-        if self.procs <= 1:
-            self.run_single_threaded()
-        else:
-            self.run_parallel()
+
+        self.procs = 1 if self.procs <= 1 else self.procs
+        self.run_parallel()
 
     def run_single_threaded(self):
         print("Running {:,} simulations (single threaded mode)".format(self.simulations))
@@ -124,47 +124,20 @@ class SimulationManager:
 
     def run_parallel(self):
 
-        def proc_simu_runner(queue, simulation, plot):
-            logging.info(process.current_process().name + ' about to launch simulation')
-            simulation.launch()
-            result = simulation.result
-            logging.info(process.current_process().name + ' collected simulation result')
-            if plot:
-                plot_data = simulation.intermediate_results
-                logging.info(process.current_process().name + ' collected plot data')
-                queue.put([result, plot_data])
-                logging.info(process.current_process().name + ' added data in queue')
-            else:
-                queue.put(result)
-                logging.info(process.current_process().name + ' added data in queue')
-
         print('Running {:,} simulations using {} parallel workers'.format(self.simulations, self.procs))
         simulations_per_proc = (self.simulations - self.simulations % self.procs) // self.procs
         print('Each parallel worker will process {:,} simulations'.format(simulations_per_proc))
 
         exec_start = datetime.datetime.now()
-        q = Queue()
-        jobs = []
-        for i in range(self.procs):
-            simulation = Simulation(self.starting_cards, self.draws, self.target, simulations_per_proc, self.plot
-                                    , plotutil.collect_frequency(self.simulations))
-            p = Process(target=proc_simu_runner, args=(q, simulation, self.plot))
-            jobs.append(p)
-            p.start()
 
-        # ensuring all the parallel processes finish running
-        for p in jobs:
-            p.join()
-
-        proc_results=[]
         plot_data=[]
-        while not q.empty():
-            if self.plot:
-                _res=q.get()
-                proc_results.append(_res[0])
-                plot_data.append(_res[1])
-            else:
-                proc_results.append(q.get())
+        proc_results=[]
+        with ProcessPoolExecutor() as executor:
+            for simulation in executor.map(Simulation(self.starting_cards, self.draws, self.target, simulations_per_proc, self.plot
+                    , plotutil.collect_frequency(self.simulations)).launch, range(self.procs)):
+                proc_results.append(simulation.result)
+                plot_data.append(simulation.intermediate_results)
+
         exec_time=datetime.datetime.now()-exec_start
 
         # the final result reported to the command line
