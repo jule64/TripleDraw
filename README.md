@@ -58,11 +58,16 @@ The help menu shows you how to run simulations in more details:
 
 ### Charting
 
-The `--plot` option takes snapshots of the simulation at various stages of the computation and renders these values in a time series chart.  This is interesting to see how the simulation converges to its final result.  
+The `--plot` option displays a chart of the simulation once the simulation completes.  I works by taking snapshots of the simulation at various stages of the computation and renders these values in a time series chart.  
 
-The black lines show the simulation values for each worker process and the red line shows the consolidated values.  The last data point on the red line is the simulation result and its value is printed in red in the chart.
+A typical simulation chart will show worker level simulation in black while the consolidated results of those simulations are shown in red.  The final simulation result is the last data point on the red line and is displayed in red too.
 
-**Odds of drawing to 9 Low after 3 draws:**  
+Charts are interesting to see how the simulation converges to its final result. 
+
+
+**Odds of drawing to 9 Low after 3 draws**  
+This is a typical example of how a simulation chart looks like:  
+
 ![9low3draws](./img/9low_after_3draws.png)
 
   
@@ -72,6 +77,11 @@ The chart below shows the results of a *7 low preflop* scenario.  Since this is 
 
 ![9low3draws](./img/7low_preflop.png)
 
+
+**Big simulation (just for fun!)**  
+And finally we run an 800k simulation using **50 workers**, just because it looks cool :)  
+
+![50workers](./img/50procs.png)
 
 
 ### Performance
