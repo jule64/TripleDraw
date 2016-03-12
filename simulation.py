@@ -117,9 +117,12 @@ class SimulationManager:
 
         plot_data=[]
         proc_results=[]
+
+        # this is our multi processing logic.  Cleanly handled by ProcessExecutor + map + context manager
         with ProcessPoolExecutor() as executor:
-            for simulation in executor.map(Simulation(self.starting_cards, self.draws, self.target, simulations_per_proc, self.plot
-                    , plotutil.collect_frequency(self.simulations)).launch, range(self.procs)):
+            simulation = Simulation(self.starting_cards, self.draws, self.target, simulations_per_proc, self.plot
+                       , plotutil.collect_frequency(self.simulations))
+            for simulation in executor.map(simulation.launch, range(self.procs)):
                 proc_results.append(simulation.result)
                 plot_data.append(simulation.intermediate_results)
 
