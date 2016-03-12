@@ -14,10 +14,11 @@ def help_msgs(key):
           'simulations':       'The number of simulations to run. By default it is 50,0000 which offers '
                                'roughly 0.1% precision around the true odds.',
           'procs':             'The number of parallel processes to use to run the simulations. By defaults this number is '
-                               'equal to the number of cores on your machine. Set this value to 0 to run the '
-                               'application single threaded.',
+                               'equal to the number of cores on your machine minus 1.  A number less than or equal to 1 '
+                               'will default to 1 process'
+                               'process',
           'plot':              'displays a chart showing how the simulation\'s results are converging to their '
-                               'final value (Parallel mode only)'}
+                               'final value'}
     return msgs[key]
 
 

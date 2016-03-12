@@ -108,25 +108,10 @@ class SimulationManager:
             return None
 
         self.procs = 1 if self.procs <= 1 else self.procs
-        self.run_parallel()
 
-    def run_single_threaded(self):
-        print("Running {:,} simulations (single threaded mode)".format(self.simulations))
-        simulation = Simulation(self.starting_cards, self.draws, self.target, self.simulations, self.plot
-                                , plotutil.collect_frequency(self.simulations))
-        exec_start = datetime.datetime.now()
-        if self.plot:
-            print(red('>>> Info: no charting available in single threaded mode'))
-        simulation.launch()
-        result = simulation.result
-        exec_time=datetime.datetime.now()-exec_start
-        self.report_results_to_stdout(result, exec_time)
-
-    def run_parallel(self):
-
-        print('Running {:,} simulations using {} parallel workers'.format(self.simulations, self.procs))
+        print('Running {:,} simulations using {} workers'.format(self.simulations, self.procs))
         simulations_per_proc = (self.simulations - self.simulations % self.procs) // self.procs
-        print('Each parallel worker will process {:,} simulations'.format(simulations_per_proc))
+        print('Each worker will process {:,} simulations'.format(simulations_per_proc))
 
         exec_start = datetime.datetime.now()
 

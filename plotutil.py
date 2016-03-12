@@ -4,6 +4,8 @@ import logging
 def plot_simulation_results(results, nb_simul, nb_workers):
     """Plots a time series chart of a simulation."""
 
+    # TODO cleanup conditional logic for single worker case
+
     try:
         import matplotlib.pyplot as plt
         import matplotlib.patches as mpatches
@@ -17,30 +19,40 @@ def plot_simulation_results(results, nb_simul, nb_workers):
     x_data=[x for x in range(l_list)]
 
     # add sub processes results to chart.  Can be one or more lists
-    for sub_proc_results in results:
-        plt.plot(x_data,sub_proc_results,'black')
+
+    if nb_workers > 1:
+        for sub_proc_results in results:
+            plt.plot(x_data,sub_proc_results,'black')
 
     # merged results
     merged_results=[sum(results[i][j] for i in range(h_list)) / h_list for j in range(l_list)]
-    plt.plot(x_data,merged_results,'r-',linewidth=3)
+
+    if nb_workers > 1:
+        plt.plot(x_data,merged_results,'r-',linewidth=3)
+    else:
+        plt.plot(x_data,merged_results,'r-',linewidth=2)
+
 
     # display final result
     plt.text(l_list, merged_results[l_list - 1], '{0:.2%}'.format(merged_results[l_list - 1]), color='red')
 
     # legends
-    red_patch = mpatches.Patch(color='red', label='consolidated results',linewidth=2)
-    black_patch = mpatches.Patch(color='black', label='workers results',linewidth=1)
-
-    # determine best place to put legend on chart. If the right part of the chart
-    # occupies the lower 35% of the frame then put legend on top right corner.
-    # If not, put it on the bottom right corner (most common case)
-    lower_bound_y = plt.get_current_fig_manager().canvas.figure.axes[0].dataLim.min[1]
-    higher_bound_y = plt.get_current_fig_manager().canvas.figure.axes[0].dataLim.max[1]
-    if (merged_results[l_list - 1]-lower_bound_y)/(higher_bound_y-lower_bound_y) < 0.35:
-        location=1 # legend on top right corner
+    if nb_workers == 1:
+        pass # no legend since only one graph line
     else:
-        location=4 # legend on bottom right corner
-    plt.legend(handles=[black_patch,red_patch],loc=location)
+        red_patch = mpatches.Patch(color='red', label='consolidated results',linewidth=2)
+        black_patch = mpatches.Patch(color='black', label='workers results',linewidth=1)
+
+        # determine best place to put legend on chart. If the right part of the chart
+        # occupies the lower 35% of the frame then put legend on top right corner.
+        # If not, put it on the bottom right corner (most common case)
+        lower_bound_y = plt.get_current_fig_manager().canvas.figure.axes[0].dataLim.min[1]
+        higher_bound_y = plt.get_current_fig_manager().canvas.figure.axes[0].dataLim.max[1]
+        if (merged_results[l_list - 1]-lower_bound_y)/(higher_bound_y-lower_bound_y) < 0.35:
+            location=1 # legend on top right corner
+        else:
+            location=4 # legend on bottom right corner
+        plt.legend(handles=[black_patch,red_patch],loc=location)
 
     plt.title('Simulation Stages\n({:,} simulations dispatched to {} workers)'.format(nb_simul,nb_workers),fontsize=12,fontweight='bold')
     freq = collect_frequency(nb_simul)
