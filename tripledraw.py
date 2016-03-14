@@ -14,7 +14,8 @@ from simulation import SimulationManager
 @click.option('--procs','-p', default=cpu_count()-1, help=help_msgs('procs'))
 @click.option('--plot', is_flag=True, help=help_msgs('plot'))
 def main(starting_cards, draws, target, simulations, procs, plot):
-    """Welcome to tripledraw!
+    """
+    Welcome to tripledraw!
 
     ## usage examples:
 
@@ -36,13 +37,14 @@ def main(starting_cards, draws, target, simulations, procs, plot):
 if __name__ == '__main__':
     # The below is used for dev.  The `default_map` object gets passed to Click to set the defaults.
     # This avoids messing about with the defaults in the Click decorators in main()
-    main(default_map={
-        'simulations': 10000,
-        'procs':2,
-        'draws':0,
-        'starting_cards':'',
-        'target':'8',
-        'plot':True,
-    })
+    # main(default_map={
+    #     'simulations': 100000,
+    #     'procs':4,
+    #     'draws':1,
+    #     'starting_cards':'Qc+Ks',
+    #     'target':'J',
+    #     'plot':True,
+    # })
+    main()
 
 

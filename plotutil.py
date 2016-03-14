@@ -69,8 +69,8 @@ def plot_simulation_results(results, nb_simul, nb_workers):
 def collect_frequency(simulations):
     """
     Calculates the frequency at which sub processes should collect intermediary results for plotting
-    This is done to ensure that the total number of data points loaded in the charts do not exceed
-    a breaking limit which, based on our tests seems to be about 7,000 data points
+    This is done to ensure that the total number of data points loaded in the charts don't break the
+    matplotlib chart generation. Based on our tests this number seems to be about 7,000 data points
     """
 
     max_data_points_to_load = 5000     # the max number of data points we allow in the charts

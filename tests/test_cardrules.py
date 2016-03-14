@@ -1,7 +1,5 @@
 import unittest
-
 from cardrules import CardRules
-
 from deck import Deck
 
 
@@ -46,7 +44,6 @@ class CardRulesFinalCheckTests(unittest.TestCase):
         self.card_rules.set_target('10')
         hand = ['7c','9c','Js','5c','2c']
         self.assertFalse(self.card_rules.check_success(hand))
-
         # two high cards
         self.card_rules.set_target('8')
         hand = ['7c','9c','Js','5h','Kc']
@@ -57,7 +54,6 @@ class CardRulesFinalCheckTests(unittest.TestCase):
         self.card_rules.set_target('10')
         hand = ['7c','9c','10s','5h','8c']
         self.assertTrue(self.card_rules.check_success(hand))
-
         # valid with highest card < target
         self.card_rules.set_target('10')
         hand = ['7c','9c','2s','5h','8c']
@@ -77,7 +73,6 @@ class CardRulesCardsRemovalTests(unittest.TestCase):
         expected_cards = ['7c','9c','8c']
         self.assertTrue(set(retained_cards)==set(expected_cards))
 
-
     def test_remove_pair_of_dominant_suit(self):
         # given a pair, the card from the dominant suit should be removed
         self.card_rules.set_target('J')
@@ -85,7 +80,6 @@ class CardRulesCardsRemovalTests(unittest.TestCase):
         retained_cards = self.card_rules.apply_rules(hand)
         expected_cards = ['7c','9s','6h','8c']
         self.assertTrue(set(retained_cards)==set(expected_cards))
-
 
     def test_remove_pair_of_dominant_suit2(self):
         # when there are no dominant suit (or equality of suits) the second pair card

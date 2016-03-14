@@ -2,7 +2,7 @@ import logging
 
 
 def help_msgs(key):
-    '''The command line `--help` command messages'''
+    """The command line `--help` command messages"""
 
     msgs={'starting-cards':    'Any number of predefined cards to have in your starting hand. '
                                'The default is no predefined cards (i.e. all 5 starting cards are randomly '

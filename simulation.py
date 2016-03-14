@@ -9,10 +9,77 @@ import logging
 from concurrent.futures import ProcessPoolExecutor
 
 
+class SimulationManager:
+    """
+    Responsible for running the simulations and reporting the results to console and chart
+    """
+
+    def __init__(self, *args):
+        self.starting_cards, self.draws, self.target, self.simulations, self.procs, self.plot = args
+        self.result = None
+        self.plot_list = None
+
+    def run_simulation(self):
+        if self.starting_cards != '' and self.draws == 0:
+            print(red('>>> Warning: you are using starting card(s) with 0 draws.  '
+                      'You should use at least one draw when you provide starting cards'))
+
+        if self.simulations < 1000:
+            print(red('>>> Error: please choose a number of simulations greater than 1,000'))
+            return None
+
+        self.procs = 1 if self.procs <= 1 else self.procs
+
+        print('Running {:,} simulations using {} workers'.format(self.simulations, self.procs))
+        simulations_per_proc = (self.simulations - self.simulations % self.procs) // self.procs
+        print('Each worker will process {:,} simulations'.format(simulations_per_proc))
+
+        exec_start = datetime.datetime.now()
+
+        plot_data=[]
+        proc_results=[]
+
+        # this is our multi processing logic.  Cleanly handled by ProcessExecutor + map + context manager
+        with ProcessPoolExecutor() as executor:
+            simulation = Simulation(self.starting_cards, self.draws, self.target, simulations_per_proc, self.plot
+                                    , plotutil.collect_frequency(self.simulations))
+            for simulation in executor.map(simulation.launch, range(self.procs)):
+                proc_results.append(simulation.result)
+                plot_data.append(simulation.intermediate_results)
+
+        exec_time=datetime.datetime.now()-exec_start
+
+        # the final result reported to the command line
+        aggregated_result = math.fsum(proc_results) / self.procs
+        self.report_results_to_stdout(aggregated_result, exec_time)
+
+        if self.plot:
+            plotutil.plot_simulation_results(plot_data, self.simulations, self.procs)
+
+    def report_results_to_stdout(self, result, exec_time):
+        """pretty prints the results of a simulation"""
+
+        print(blue('Execution time: {}s {}ms'.format(exec_time.seconds, exec_time.microseconds)))
+
+        if self.starting_cards == '':
+            self.starting_cards='any'
+
+        result_record=[self.starting_cards, str(self.draws), self.target + ' low', '{:,}'.format(self.simulations), '{0:.4%}'.format(result)]
+        headers = ['starting cards','nb draws','target hand','simulations','odds (%)']
+        collist = tuple([i for i in range(headers.__len__() + 1)])
+        # this sets the initial column width based on the width of the headers
+        colwidth = dict(zip(collist,(len(x) for x in headers)))
+        # if the width of our values is longer than the corresponding header's we update that column's width
+        colwidth.update(( i, max(colwidth[i],len(el)) ) for i,el in enumerate(result_record))
+        width_pattern = ' | '.join('%%-%ss' % colwidth[i] for i in range(0,5))
+
+        # note the lists are converted into tuples in order to apply width_pattern onto them
+        print('\n'.join((width_pattern % tuple(headers), '-|-'.join(colwidth[i] * '-' for i in range(5)),
+                         ''.join(width_pattern % tuple(result_record)))))
+
+
 class Simulation(object):
-    '''
-    The main simulation object
-    '''
+    """The main simulation object"""
 
     def __init__(self,starting_cards=None, number_draws=None, target=None, simulations=None,
                  plot=None, collect_frequency=None):
@@ -28,10 +95,9 @@ class Simulation(object):
         self.collect_frequency = collect_frequency
 
     def launch(self, proc_number):
-        '''
-        Runs a simulation
+        """Runs a simulation
         :return: double: the ratio of successful hands over total hands
-        '''
+        """
 
         logging.info(process.current_process().name + ': Plot data will be collected every {} runs'.
                      format(self.collect_frequency))
@@ -91,67 +157,3 @@ class Simulation(object):
         return self._intermediate_results
 
 
-class SimulationManager:
-
-    def __init__(self, *args):
-        self.starting_cards, self.draws, self.target, self.simulations, self.procs, self.plot = args
-        self.result = None
-        self.plot_list = None
-
-    def run_simulation(self):
-        if self.starting_cards != '' and self.draws == 0:
-            print(red('>>> Warning: you are using starting card(s) with 0 draws.  '
-                      'You should use at least one draw when you provide starting cards'))
-
-        if self.simulations < 1000:
-            print(red('>>> Error: please choose a number of simulations greater than 1,000'))
-            return None
-
-        self.procs = 1 if self.procs <= 1 else self.procs
-
-        print('Running {:,} simulations using {} workers'.format(self.simulations, self.procs))
-        simulations_per_proc = (self.simulations - self.simulations % self.procs) // self.procs
-        print('Each worker will process {:,} simulations'.format(simulations_per_proc))
-
-        exec_start = datetime.datetime.now()
-
-        plot_data=[]
-        proc_results=[]
-
-        # this is our multi processing logic.  Cleanly handled by ProcessExecutor + map + context manager
-        with ProcessPoolExecutor() as executor:
-            simulation = Simulation(self.starting_cards, self.draws, self.target, simulations_per_proc, self.plot
-                       , plotutil.collect_frequency(self.simulations))
-            for simulation in executor.map(simulation.launch, range(self.procs)):
-                proc_results.append(simulation.result)
-                plot_data.append(simulation.intermediate_results)
-
-        exec_time=datetime.datetime.now()-exec_start
-
-        # the final result reported to the command line
-        aggregated_result = math.fsum(proc_results) / self.procs
-        self.report_results_to_stdout(aggregated_result, exec_time)
-
-        if self.plot:
-            plotutil.plot_simulation_results(plot_data, self.simulations, self.procs)
-
-    def report_results_to_stdout(self, result, exec_time):
-        """pretty prints the results of a simulation"""
-
-        print(blue('Execution time: {}s {}ms'.format(exec_time.seconds, exec_time.microseconds)))
-
-        if self.starting_cards == '':
-            self.starting_cards='any'
-
-        result_record=[self.starting_cards, str(self.draws), self.target + ' low', '{:,}'.format(self.simulations), '{0:.4%}'.format(result)]
-        headers = ['starting cards','nb draws','target hand','simulations','odds (%)']
-        collist = tuple([i for i in range(headers.__len__() + 1)])
-        # this sets the initial column width based on the width of the headers
-        colwidth = dict(zip(collist,(len(x) for x in headers)))
-        # if the width of our values is longer than the corresponding header's we update that column's width
-        colwidth.update(( i, max(colwidth[i],len(el)) ) for i,el in enumerate(result_record))
-        width_pattern = ' | '.join('%%-%ss' % colwidth[i] for i in range(0,5))
-
-        # note the lists are converted into tuples in order to apply width_pattern onto them
-        print('\n'.join((width_pattern % tuple(headers), '-|-'.join(colwidth[i] * '-' for i in range(5)),
-                               ''.join(width_pattern % tuple(result_record)))))

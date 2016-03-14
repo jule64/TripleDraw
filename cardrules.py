@@ -16,7 +16,7 @@ class CardRules(object):
         to determine which cards to keep and then return a list of only
         those cards that were retained.
 
-        @:returns retained_cards or True/False on last check
+        @:returns list: retained_cards
         """
 
         teststraight=True
@@ -117,14 +117,14 @@ class CardRules(object):
         return cardutils.convert_integer_cards_to_cards(rank_ordered_integer_hand,self.deck)
 
     def check_success(self, cards_in_hand):
-        '''
+        """
         Checks if the hand is a valid low ball hand or not.
         Note unlike `apply_rules(cards_in_hand)` this method
         does not modify the list passed to it.
 
         :param cards_in_hand:
-        :return: True if the hand is a valid low ball hand, False if not
-        '''
+        :return: boolean: True if the hand is a valid low ball hand, False if not
+        """
 
         integer_hand = cardutils.convert_cards_to_integers(cards_in_hand,self.deck)
 
