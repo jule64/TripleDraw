@@ -7,16 +7,16 @@ TripleDraw :dart:
 
 ### Before You Start
 
-The main goal of this project was to build a Python app that uses some advanced Python programming techniques such as multiprocessing, decorators, lambdas and matplotlib charting while also learning more about poker and card probabilities.   It is free to use, copy and modify, however no warranties are provided as per the standard open source [licence disclaimer](#disclaimer) at the end of this document.
+The main goal of this project was to build a Python app that uses some advanced Python programming techniques such as multiprocessing, decorators, lambdas and matplotlib charting while also learning more about poker and card probabilities.   It is free to use, copy and modify, however no warranties are provided as per the standard open source [licence](#disclaimer) at the end of this document.
 
 
 ### Introduction
 
 TripleDraw lets you evaluate the odds of hitting a given target hand, say 8 low, from *pre-flop stage* to the *last draw* stage.
 
-TripleDraw uses a technique called Monte Carlo simulations to estimate the probabilities of a given scenario.  It does that by  **simulating** large amounts of random draws, apply card playing rules and average out the results.  
+TripleDraw implements a Monte Carlo-style approach to estimate the probabilities of a given scenario.  It does that by  **simulating** large amounts of random draws, apply card playing rules and average out the results.  
 
-As such it is important to note that TripleDraw is not a calculator but a *simulator*.  You can find more details about how those compare in the [Understanding TripleDraw's Results](#understanding-tripledraw-results) section.
+As such it is important to note that TripleDraw does not calculate exact probabilities but rather approximations.  The section on [Understanding TripleDraw's Results](#understanding-tripledraw-results) illustrate the difference with an example.
 
 ### Installation
 
@@ -40,16 +40,16 @@ The below line will evaluate the odds of being dealt a *Jack low (or better) pre
 
 `tripledraw --starting-cards '' --draws 0 --target J`
 
-This will print the result as follow  
+This will print the results as follow  
 
 
 ```
-starting cards | nb draws | target hand | simulations | odds (%) 
+starting cards | nb draws | target hand | simulations | odds (%)
 ---------------|----------|-------------|-------------|----------
 any            | 0        | J low       | 100,000      | 9.692667%   
 ```
 
-Of course you can also study more advanced scenarios, such adding one, two or three draws and specify starting cards. **In fact setting the number of draws to 1 allows you to study the single draw variant of the game!**  
+You can also study more advanced scenarios, such adding one, two or three draws and specify starting cards. **In fact setting the number of draws to 1 allows you to study the single draw variant of the game!**  
 
 The help menu shows you how to run simulations in more details:  
 
@@ -60,9 +60,9 @@ The help menu shows you how to run simulations in more details:
 
 The `--plot` option displays a chart of the simulation once the simulation completes.  I works by taking snapshots of the simulation at various stages of the computation and renders these values in a time series chart.  
 
-A typical simulation chart will show worker level simulation in black while the consolidated results of those simulations are shown in red.  The final simulation result is the last data point on the red line and is displayed in red too.
+A typical simulation chart will show the workers simulations plotted in black while the consolidated results of those simulations are shown in red.  The final simulation result is the last data point on the red line and is displayed on the chart as a number.
 
-Charts are interesting to see how the simulation converges to its final result. 
+Charts are nice way to visualize how the simulation converges to its final result.
 
 
 **Odds of drawing to 9 Low after 3 draws**  
@@ -70,10 +70,10 @@ This is a typical example of how a simulation chart looks like:
 
 ![9low3draws](./img/9low_after_3draws.png)
 
-  
+
 
 **Odds of drawing to 7 Low pre flop:**  
-The chart below shows the results of a *7 low preflop* scenario.  Since this is a rare hand to draw preflop we end up with this interesting 'saw'-shaped chart.  
+This is the strongest hand in Lowball poker, and getting it pre-flop is a rather rare causing the simulation to take this interesting 'saw'-shaped form.
 
 ![9low3draws](./img/7low_preflop.png)
 
@@ -86,15 +86,16 @@ And finally we plot an 800k simulation using **50 workers**, just because it loo
 
 ### Performance
 
-**UPDATE**:  We have now ported our code to **Python 3**, hence you are not able to use *Pypy* with TripleDraw anymore as Pypy runs only on Python 2 code base.  Apologies  
+**UPDATE**:  I have recently ported the code to **Python 3** but have broken compatibility to with  *Python2* and *Pypy* in the process, I am working on making the code backward compatible and will make it available shortly. Apologies for the inconvenience.
 
 TripleDraw's performance will highly depend on the number of cores on your machine as well as the complexity of the scenarios being evaluated.  For example, 100,000 simulations should run in under 0.4 seconds in parallel mode (on 8 cores macbook).  1 million simulation will run in about 4 seconds under the same scenario.  However, in a three draws scenario, these performances drop to 1 seconds and about 8 seconds respectively. Note You can set the number of worker/cores to use by setting the `--procs` option.  
 
 Additionally, you might want to try to run TripleDraw with **PyPy** (http://pypy.org/).  PyPy is an optimised Python interpreter that can significantly speed up your program without changing any of your code.  In our case, a large simulation will run **over 4 times faster with PyPy** than with regular CPython, see for yourself, the difference is impressive:
 
+
 **1 million simulations using PyPy vs CPython:**  
 ![Pypytest](./img/pypy-v-cpython.jpg)  
-  
+
 
 ### System Requirements
 
